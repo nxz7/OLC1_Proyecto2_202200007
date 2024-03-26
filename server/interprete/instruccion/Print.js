@@ -7,15 +7,20 @@ class Print extends Instruccion{
         this.expresion = expresion;
     }
 
-    interpretar(entorno){
-        let valor = this.expresion.interpretar(null);
-        
-        if(this.expresion.tipo == "ERROR"){
-            console.log("ERROR SEMANTICO > PRINT ERRORES")
-            return;
+    interpretar(entorno) {
+        try {
+            let valor = this.expresion.interpretar(null);
+    
+            if (this.expresion.tipo == "ERROR") {
+                console.log("ERROR SEMANTICO > PRINT ERRORES");
+                return;
+            }
+            console.log(valor);
+        } catch (error) {
+            console.error("ERROR", error);
         }
-        console.log(valor);
     }
+    
 
 }
 

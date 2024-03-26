@@ -3,23 +3,44 @@
 %options case-insensitive 
 
 // ---------> Expresiones Regulares
-entero  [0-9]+;
-cadena [\"][^\n\"]*[\"];
+
+
+
+comentario_multi [\/][\*][^\*\/]+[\*][\/];
+comentario_una [\/][\/][^\n]+;
+
+
 
 %%
 // -----> Reglas Lexicas
-"println"       {return "RPRINT";}
+"cout"       {return "COUT";}
 
 "+"             {return "MAS";}
 "*"             {return "POR";}
+"="             {return "IGUAL";}
+"/"             {return "DIVIDIR";}
+"-"             {return "MENOS";}
+"pow"           {return "potencia";}
+"%"             {return "modulo";}
 
-"("             {return "PARIZQ"; }
-")"             {return  "PARDER"; }
-";"             {return  "PYC"; }
+
+"("             {return "abrirPar"; }
+")"             {return  "cerrarPar"; }
+";"             {return  "puntoycoma"; }
+"<"             {return  "menorQue"; }
+">"             {return  "mayorQue"; }
+"!"             {return  "exclamacion"; }
+
+[0-9]+[.][0-9]+\b    return 'DOUBLE';
+[0-9]+\b                return 'INT';
+("true"|"false")\b      return 'BOOLEAN';
+\'[^\']\'               { yytext = yytext.substr(1,yyleng-2); return 'CHAR'; }
+
+\"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }  
+  
 
 
-{entero}        { return 'ENTERO'; } 
-{cadena}        { return 'CADENA';}         
+([a-zA-Z])[a-zA-Z0-9_]*	return 'PALABRA_I';
 
 // -----> Espacios en Blanco
 [ \s\r\n\t]             {/* Espacios se ignoran */}
@@ -38,8 +59,10 @@ cadena [\"][^\n\"]*[\"];
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
 %}    
 
-%left 'MAS'
-%left 'POR'
+
+%left 'MAS','MENOS'
+%left 'POR','DIVIDIR', 'modulo'
+
 
 // -------> Simbolo Inicial
 %start inicio
@@ -58,17 +81,23 @@ listainstr
 
 instruccion
 	: print         { $$ = $1; }   
-	| error PYC 	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+	| error puntoycoma	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 
 print 
-    : RPRINT PARIZQ expresion PARDER PYC    { $$ = new Print($3); }
+    : COUT menorQue menorQue expresion puntoycoma   { $$ = new Print($4); }
 ;
 
 expresion 
-    : ENTERO    { $$ = new Dato($1, 'INT');  }
-    | CADENA    { $$ = new Dato($1, 'STRING'); }
+    : CADENA    { $$ = new Dato($1, 'STD::STRING'); }
+    | CHAR  { $$ = new Dato($1, 'CHAR'); }
+    | BOOLEAN   { $$ = new Dato($1, 'BOOL'); }
+    | DOUBLE    { $$ = new Dato($1, 'DOUBLE'); }   
+    | INT   { $$ = new Dato($1, 'INT'); }
+    | expresion modulo expresion       {$$ = new Aritmetica($1, $2, $3);}
+    | expresion DIVIDIR expresion       {$$ = new Aritmetica($1, $2, $3);}
+    | expresion MENOS expresion       {$$ = new Aritmetica($1, $2, $3);}
     | expresion MAS expresion       {$$ = new Aritmetica($1, $2, $3);}
     | expresion POR expresion       {$$ = new Aritmetica($1, $2, $3);}
 ;
