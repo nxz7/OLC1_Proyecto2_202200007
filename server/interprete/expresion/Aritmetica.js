@@ -1,18 +1,17 @@
-const Instruccion = require("../Instruccion.js");
+const { Expresion, TipoDato } = require("../Expresion");
 
-class Aritmetica extends Instruccion{
-    constructor(expIzq, operador, expDer){
-        super();
+class Aritmetica extends Expresion{
+    constructor(expIzq, operador, expDer, fila, columna){
+        super("ERROR", TipoDato.ERROR, fila, columna);
         this.expIzq = expIzq;
         this.operador = operador;
         this.expDer = expDer;
-        this.tipo = 'ERROR';
-        this.valor = 'null';
+
     }
 
     interpretar(entorno){
-        let valorIzq = this.expIzq.interpretar(null);
-        let valorDer = this.expDer.interpretar(null);
+        let valorIzq = this.expIzq.interpretar(entorno);
+        let valorDer = this.expDer.interpretar(entorno);
 
         if(this.operador == "+"){
             //INT - INT
@@ -103,7 +102,7 @@ class Aritmetica extends Instruccion{
 
             else{
                 this.tipo == "ERROR";
-                console.log("Error Semántico: ERROR EN LOS TIPOS DE DATOS");
+                console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
                 return this.valor;
             }
         }
@@ -151,7 +150,7 @@ class Aritmetica extends Instruccion{
 
             else{
                 this.tipo == "ERROR";
-                console.log("Error Semántico: Error de tipo de dato");
+                console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
                 return this.valor;
             }
         }
@@ -214,7 +213,7 @@ class Aritmetica extends Instruccion{
 
         else{
                 this.tipo == "ERROR";
-                console.log("Error Semántico: ERROR EN LOS TIPOS DE DATOS");
+                console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
                 return this.valor;
             }
 
@@ -262,7 +261,7 @@ class Aritmetica extends Instruccion{
                     }
             else{
                 this.tipo == "ERROR";
-                console.log("Error Semántico: Error de tipo de dato");
+                console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
                 return this.valor;
             }
         }

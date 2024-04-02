@@ -3,23 +3,34 @@ app.listen(app.get('port'));
 console.log('Server on port', app.get('port'));
 
 const analizador = require("./analizador/parser.js");
+const Entorno = require("./interprete/entorno/Entorno.js");
 
 let entrada = `
-    cout<< 25+15*2;
+    cout<< 2+8;
     ?@&
-    cout<< 15*2.5 ;
-15*2+2; %
-cout<< 15/false ;
 
+
+    cout<< 15*2.5 ;
+cout<< 15/false ;
+15+2;
+cout<< -1;
+cout<< -2.5;
+cout<< 27;
+if(true){
+    cout<< "dentro del if jeje";
+    cout<< 2+2+2*10;
+}
+cout<< "fuera del if";
 `;
 
 let resultado = analizador.parse(entrada); // lo del parser
+let entornoGlobal = new Entorno("GLOBAL", null);
 
 console.log(resultado);
 
 try {
     resultado.forEach(instruccion => {
-        instruccion.interpretar(null);
+        instruccion.interpretar(entornoGlobal);
     });
 } catch (error) {
     console.error("ERROR SEMANTICO EN:", error);

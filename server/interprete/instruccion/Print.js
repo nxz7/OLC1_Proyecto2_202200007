@@ -1,18 +1,19 @@
-const Instruccion = require("../Instruccion.js");
+const { TipoDato } = require("../Expresion");
+const { Instruccion, TipoInstr } = require("../Instruccion");
 
 class Print extends Instruccion{
 
-    constructor(expresion){
-        super();
+    constructor(expresion, fila, columna){
+        super(TipoInstr.PRINT, fila, columna);
         this.expresion = expresion;
     }
 
     interpretar(entorno) {
         try {
-            let valor = this.expresion.interpretar(null);
+            let valor = this.expresion.interpretar(entorno);
     
             if (this.expresion.tipo == "ERROR") {
-                console.log("ERROR SEMANTICO >>>> intentar imprimir un error");
+                console.log("Error Semántico >>>> intentar imprimir un error");
                 return;
             }
             console.log(valor);

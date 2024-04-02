@@ -1,12 +1,12 @@
-const Instruccion = require("../Instruccion.js");
+const {Expresion} = require("../Expresion.js")
 
-class Dato extends Instruccion{
+class Dato extends Expresion{
     constructor(valor, tipo,linea, columna){
-        super();
-        this.tipo = tipo;
-        this.valor = valor;
-        this.linea = linea;
-        this.columna = columna;
+        super(valor, tipo,linea, columna);
+        //this.tipo = tipo;
+        //this.valor = valor;
+        //this.linea = linea;
+        //this.columna = columna;
     }
 
     interpretar(entorno){
@@ -23,7 +23,7 @@ class Dato extends Instruccion{
                     } else if (lowerCaseValue === 'false') {
                         return this.valor = false;
                     } else {
-                        throw new Error("ERROR SEMANTICO -> VALOR BOOLEANO NO VALIDO: " + this.valor);
+                        throw new Error("Error Semántico -> VALOR BOOLEANO NO VALIDO: " + this.valor);
                     }
                     break;
 
