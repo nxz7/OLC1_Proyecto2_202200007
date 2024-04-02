@@ -12,7 +12,7 @@ class Print extends Instruccion{
             let valor = this.expresion.interpretar(null);
     
             if (this.expresion.tipo == "ERROR") {
-                console.log("ERROR SEMANTICO > PRINT ERRORES");
+                console.log("ERROR SEMANTICO >>>> intentar imprimir un error");
                 return;
             }
             console.log(valor);

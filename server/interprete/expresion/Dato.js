@@ -1,10 +1,12 @@
 const Instruccion = require("../Instruccion.js");
 
 class Dato extends Instruccion{
-    constructor(valor, tipo){
+    constructor(valor, tipo,linea, columna){
         super();
         this.tipo = tipo;
         this.valor = valor;
+        this.linea = linea;
+        this.columna = columna;
     }
 
     interpretar(entorno){
@@ -13,6 +15,7 @@ class Dato extends Instruccion{
             case 'STD::STRING': return this.valor;
             case 'DOUBLE':return parseFloat(this.valor);
             case 'CHAR': return this.valor;
+            case 'ERROR': return this.valor;
             case 'BOOL':
                     let lowerCaseValue = this.valor.toLowerCase();
                     if (lowerCaseValue === 'true') {

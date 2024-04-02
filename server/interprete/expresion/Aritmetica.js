@@ -292,7 +292,7 @@ class Aritmetica extends Instruccion{
         }
         else{
             this.tipo == "ERROR";
-            console.log("Error Semántico: Error de tipo SIGNO ARITMETICO");
+            console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
             return this.valor;
         }
 

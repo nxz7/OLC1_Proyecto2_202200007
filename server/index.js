@@ -6,12 +6,16 @@ const analizador = require("./analizador/parser.js");
 
 let entrada = `
     cout<< 25+15*2;
-    ??
-    cout<< 25*2.5 ;
+    ?@&
+    cout<< 15*2.5 ;
+15*2+2; %
+cout<< 15/false ;
+
 `;
 
 let resultado = analizador.parse(entrada); // lo del parser
-//console.log(resultado);
+
+console.log(resultado);
 
 try {
     resultado.forEach(instruccion => {
@@ -20,3 +24,4 @@ try {
 } catch (error) {
     console.error("ERROR SEMANTICO EN:", error);
 }
+

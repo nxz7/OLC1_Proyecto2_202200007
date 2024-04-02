@@ -47,7 +47,9 @@ comentario_una [\/][\/][^\n]+;
 
 // -----> FIN DE CADENA Y ERRORES
 <<EOF>>               return 'EOF';
-.  { console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);  }
+.  { console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column); 
+    tablaDeErrores.agregarError(new error(yytext, "LEXICO", yylloc.first_line , yylloc.first_column));
+ }
 
 
 /lex
@@ -57,6 +59,9 @@ comentario_una [\/][\/][^\n]+;
     const Dato = require("../interprete/expresion/Dato.js");
     const Print = require("../interprete/instruccion/Print.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
+    const tablaError = require('../interprete/Errores/tablaError.js');
+    const error = require('../interprete/Errores/error.js');
+    const tablaDeErrores = new tablaError();
 %}    
 
 
@@ -71,7 +76,7 @@ comentario_una [\/][\/][^\n]+;
 %% // ------> Gramatica
 
 inicio
-	: listainstr EOF {$$ = $1; return $$; }
+	: listainstr EOF {$$ = $1; tablaDeErrores.imprimirTablaE(); return $$;  }
 ;
 
 listainstr 
@@ -81,7 +86,7 @@ listainstr
 
 instruccion
 	: print         { $$ = $1; }   
-	| error puntoycoma	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+	| error puntoycoma	{$$ = new Dato($1, 'ERROR'); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 
@@ -90,11 +95,11 @@ print
 ;
 
 expresion 
-    : CADENA    { $$ = new Dato($1, 'STD::STRING'); }
-    | CHAR  { $$ = new Dato($1, 'CHAR'); }
-    | BOOLEAN   { $$ = new Dato($1, 'BOOL'); }
-    | DOUBLE    { $$ = new Dato($1, 'DOUBLE'); }   
-    | INT   { $$ = new Dato($1, 'INT'); }
+    : CADENA    { $$ = new Dato($1, 'STD::STRING', @1.first_line, @1.first_column); }
+    | CHAR  { $$ = new Dato($1, 'CHAR', @1.first_line, @1.first_column); }
+    | BOOLEAN   { $$ = new Dato($1, 'BOOL', @1.first_line, @1.first_column); }
+    | DOUBLE    { $$ = new Dato($1, 'DOUBLE', @1.first_line, @1.first_column); }   
+    | INT   { $$ = new Dato($1, 'INT', @1.first_line, @1.first_column); }
     | expresion modulo expresion       {$$ = new Aritmetica($1, $2, $3);}
     | expresion DIVIDIR expresion       {$$ = new Aritmetica($1, $2, $3);}
     | expresion MENOS expresion       {$$ = new Aritmetica($1, $2, $3);}
