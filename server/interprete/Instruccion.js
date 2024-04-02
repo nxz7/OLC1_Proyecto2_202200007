@@ -11,7 +11,7 @@ class Instruccion{
 const TipoInstr = {
     PRINT: 'PRINT',
     IF: 'IF',
-    //DECLARAR: 'DECLARAR'
+    Variable: 'Variable'
 }
 
 module.exports = {Instruccion, TipoInstr}

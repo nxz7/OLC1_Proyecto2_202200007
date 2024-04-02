@@ -22,7 +22,7 @@ comentario_una [\/][\/][^\n]+;
 "-"             {return "MENOS";}
 "pow"           {return "potencia";}
 "%"             {return "modulo";}
-
+"double"            {return "dobTipo"; }
 
 "("             {return "abrirPar"; }
 ")"             {return  "cerrarPar"; }
@@ -65,6 +65,8 @@ comentario_una [\/][\/][^\n]+;
 
     const Print = require("../interprete/instruccion/Print.js");
     const If = require("../interprete/instruccion/If.js");
+    const Variable = require("../interprete/instruccion/Variable.js");
+
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
@@ -92,7 +94,8 @@ listainstr
 ;
 
 instruccion
-    : instrif       {$$ = $1}
+    : variable       {$$ = $1;}
+    | instrif       {$$ = $1;}
 	| print         { $$ = $1; }   
 	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
@@ -104,6 +107,14 @@ print
 
 instrif
 	: IF abrirPar expresion cerrarPar abrirLLAVE listainstr  cerrarLLAVE    	{$$ = new If($3, $6, @1.first_line, @1.first_column);}
+;
+
+variable
+: tipos PALABRA_I IGUAL expresion puntoycoma {$$ = new Variable($2, $1, $4, @1.first_line, @1.first_column);}
+;
+
+tipos
+:dobTipo {$$="DOUBLE";}
 ;
 
 expresion

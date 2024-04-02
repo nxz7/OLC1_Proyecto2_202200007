@@ -19,8 +19,11 @@ cout<< 27;
 if(true){
     cout<< "dentro del if jeje";
     cout<< 2+2+2*10;
+    double dentriif= 7.8;
 }
 cout<< "fuera del if";
+double pruabool = 2.5;
+double dentriif= 7.8;
 `;
 
 let resultado = analizador.parse(entrada); // lo del parser
