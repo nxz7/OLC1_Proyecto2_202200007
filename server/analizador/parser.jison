@@ -86,7 +86,7 @@ listainstr
 
 instruccion
 	: print         { $$ = $1; }   
-	| error puntoycoma	{$$ = new Dato($1, 'ERROR'); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+	| error puntoycoma	{$$ = new Dato($1, 'ERROR'); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 

@@ -96,7 +96,7 @@ case 4:
  this.$ = $$[$0]; 
 break;
 case 5:
-this.$ = new Dato($$[$0-1], 'ERROR'); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);
+this.$ = new Dato($$[$0-1], 'ERROR'); tablaDeErrores.agregarError(new error($$[$0-1], "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);
 break;
 case 6:
  this.$ = new Print($$[$0-1]); 
