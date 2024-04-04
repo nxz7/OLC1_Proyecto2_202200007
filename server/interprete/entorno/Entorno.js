@@ -15,7 +15,9 @@ class Entorno{
             return;
         }
         this.tablaSim[nombre] = new Simbolo(nombre, valor, tipo, tipoVar, fila, columna);
+        console.log("VALOR: ", valor);
         console.log(`Se agregó la variable ${nombre} al entorno ${this.nombre}`);
+        
     }
 
     getSimbolo(nombre){

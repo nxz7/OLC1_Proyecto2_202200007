@@ -10,17 +10,19 @@ class Variable extends Instruccion{
     }
 
     interpretar(entorno){
+        //console.log("----------------------- ");
         //console.log("Declarar: ", this.id);
         //console.log("Tipo: ", this.tipo);
-        //console.log("Expresion: ", this.expresion);
-        this.expresion.interpretar(entorno);
-
+        //console.log("1");
+        //console.log("Expresion: ", this.expresion.valor);
+        let valor=this.expresion.interpretar(entorno);
+        //console.log("1");
         if(this.expresion.tipo != this.tipo){
             console.log("Error semántico: el tipo de la variable no coincide con el tipo de la expresión");
             return this;
         }
-
-        entorno.addSimbolo(this.id, this.expresion, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+        //console.log("VALOR: ", valor);
+        entorno.addSimbolo(this.id, valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
 
         return this;
     }
