@@ -9,17 +9,17 @@ let entrada = `
 cout<< 55;
 cout<< "-------";
 
-cout<< 97<='a';
-cout<< 15<=15.75;
-cout<< 1<=false;
-cout<< 12<=13;
+cout<< 96>='a';
+cout<< 15>=15.75;
+cout<< 1>=false+1;
+cout<< 'A'>='A';
 cout<< "-------";
 
 cout<< "-------";
-cout<< 'a'<=98;
-cout<< 15.75<=15;
-cout<< false<=0;
-cout<< 11<=11;
+cout<< 'a'>=97.30;
+cout<< 15.75>=15;
+cout<< false>=7;
+cout<< 11.80>=11.85;
 
 `;
 
