@@ -170,6 +170,7 @@ expresion
     | BOOLEAN   { $$ = new Dato($1, TipoDato.BOOLEAN, @1.first_line, @1.first_column); }
     | DOUBLE    { $$ = new Dato($1, TipoDato.DOUBLE, @1.first_line, @1.first_column); }   
     | INT   { $$ = new Dato($1, TipoDato.INT, @1.first_line, @1.first_column); }
+    | expresion menorIgual expresion       {$$ = new Relacionales($1, $2, $3, @1.first_line, @1.first_column);} 
     | expresion menorQue expresion       {$$ = new Relacionales($1, $2, $3, @1.first_line, @1.first_column);}  
     | expresion diferente expresion       {$$ = new Relacionales($1, $2, $3, @1.first_line, @1.first_column);}  
     | expresion dosIgual expresion       {$$ = new Relacionales($1, $2, $3, @1.first_line, @1.first_column);}  

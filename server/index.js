@@ -6,39 +6,20 @@ const analizador = require("./analizador/parser.js");
 const Entorno = require("./interprete/entorno/Entorno.js");
 
 let entrada = `
-cout<< 2+8;
-    ?@&
+cout<< 55;
+cout<< "-------";
 
-    cout<< 15*2.5 ;
-cout<< 15/false ;
-15+2;
-cout<< -1;
-cout<< -2.5;
-cout<< 27;
-if(true){
-    cout<< "dentro del if jeje";
-    cout<< 2+2+2*10;
-    double dentriif= 7.8;
-}
-cout<< "fuera del if";
-double pruabool = 2.5;
-int dentriif= 7;
-bool tres= false;
-char cuatro= 'a';
-int cinco= 1;
-char ff= 's';
+cout<< 97<='a';
+cout<< 15<=15.75;
+cout<< 1<=false;
+cout<< 12<=13;
+cout<< "-------";
 
-int nuevo;
-double dob_nuevo;
-bool oo_nuevo;
-char chNuevo;
-string;
-&
-std::string str_nuevo;
-cout<< 5 == 5;
-std::string strff= "jjsjj";
-cout<< 5 != 5;
-cout<< 0<true;
+cout<< "-------";
+cout<< 'a'<=98;
+cout<< 15.75<=15;
+cout<< false<=0;
+cout<< 11<=11;
 
 `;
 
