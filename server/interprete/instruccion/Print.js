@@ -8,9 +8,9 @@ class Print extends Instruccion{
         this.expresion = expresion;
     }
 
-    interpretar(entorno) {
+    interpretar(entorno,tablaDeSimbolos) {
         try {
-            let valor = this.expresion.interpretar(entorno);
+            let valor = this.expresion.interpretar(entorno,tablaDeSimbolos);
     
             if (this.expresion.tipo == "ERROR") {
                 console.log("Error Semántico >>>> intentar imprimir un error");

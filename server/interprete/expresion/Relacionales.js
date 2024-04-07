@@ -9,9 +9,9 @@ class Relacionales extends Expresion{
 
     }
 
-    interpretar(entorno){
-        let valorIzq = this.expIzq.interpretar(entorno);
-        let valorDer = this.expDer.interpretar(entorno);
+    interpretar(entorno,tablaDeSimbolos){
+        let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
+        let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
 
         if(this.operador == "=="){
             //INT - INT

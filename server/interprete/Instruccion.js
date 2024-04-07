@@ -5,7 +5,7 @@ class Instruccion{
         this.columna = columna;
     }
 
-    interpretar(entorno){}
+    interpretar(entorno,tablaDeSimbolos){}
 }
 
 const TipoInstr = {

@@ -1,37 +1,98 @@
-const simbolo = require('./simbolo');
+const simb = require('./simb');
 
 class tablaSimbolos {
     constructor() {
         this.tablaSimbolos = [];
     }
 
-    agregarSimbolo(simbolo) {
-        this.tablaSimbolos.push(simbolo);
-        console.log(this.tablaSimbolos);
+    agregarSimbolo(simb) {
+        this.tablaSimbolos.push(simb);
+        //console.log(this.tablaSimbolos);
     }
-//esto va servir para jalar los id declarados <-------------------
-    getSimbolo(id) {
-        for (let i = 0; i < this.tablaSimbolos.length; i++) {
-            if (this.tablaSimbolos[i].id == id) {
-                return this.tablaSimbolos[i];
+
+    
+
+    getSimbolo(nombre, entorno) {
+        
+        if (entorno.nombre === "GLOBAL") 
+        {
+            //console.log("entorno global UNO");
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                    return this.tablaSimbolos[i];
+                }
             }
+            console.log("Variable no existe");
+            return null;
+        } else {
+            //console.log("ENTORNO: ", entorno.nombre);
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === entorno.nombre) {
+                    return this.tablaSimbolos[i];
+                }
+            }
+            
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                    return this.tablaSimbolos[i];
+                }
+            }
+            console.log("Variable no existe");
+            return null;
         }
-        return null;
     }
+
 
     getTabla() {
         return this.tablaSimbolos;
     }
-//prueba de imprimir en consola ---> entorno 
-    imprimirTabla() {
-        console.log("Tabla de Símbolos:");
-        console.log("=============================");
-        console.log("ID\tTipo\tValor\tFila\tColumna");
+
+    reporteTabla() {
+        let html = `
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                th {
+                    background-color: #829BB9 ;
+                    color: white;
+                }
+            </style>
+            <table border="1">
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Fila</th>
+                    <th>Columna</th>
+                    <th>ENTORNO</th>
+                </tr>`;
+        
         for (let i = 0; i < this.tablaSimbolos.length; i++) {
-            console.log(`${this.tablaSimbolos[i].id}\t${this.tablaSimbolos[i].tipo}\t${this.tablaSimbolos[i].valor}\t${this.tablaSimbolos[i].fila}\t${this.tablaSimbolos[i].columna}`);
+            html += `
+                <tr>
+                    <td>${this.tablaSimbolos[i].id}</td>
+                    <td>${this.tablaSimbolos[i].tipo}</td>
+                    <td>${this.tablaSimbolos[i].valor}</td>
+                    <td>${this.tablaSimbolos[i].fila}</td>
+                    <td>${this.tablaSimbolos[i].columna}</td>
+                    <td>${this.tablaSimbolos[i].entorno}</td>
+                </tr>`;
         }
-        console.log("=================");
+        
+        html += `
+            </table>`;
+        
+        const fs = require('fs');
+        fs.writeFileSync('tabla_simbolos.html', html, 'utf-8');
     }
+    
 }
 
 module.exports = tablaSimbolos;

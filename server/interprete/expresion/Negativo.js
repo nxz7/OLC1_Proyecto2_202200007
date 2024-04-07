@@ -7,9 +7,9 @@ class Negativo extends Expresion{
         this.expresion = expresion;
     }
 
-    interpretar(entorno){
+    interpretar(entorno,tablaDeSimbolos){
 
-        this.expresion.interpretar(entorno);
+        this.expresion.interpretar(entorno,tablaDeSimbolos);
 
         if(this.expresion.tipo === "INT"){
             this.tipo = TipoDato.INT;

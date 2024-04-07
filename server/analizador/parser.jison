@@ -72,6 +72,7 @@ comentario_una [\/][\/][^\n]+;
 %{
     const { TipoDato } = require("../interprete/Expresion.js");
     const Dato = require("../interprete/expresion/Dato.js");
+        const id = require("../interprete/expresion/id.js");
     const Negativo = require("../interprete/expresion/Negativo.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
@@ -181,4 +182,5 @@ expresion
     | expresion MENOS expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion MAS expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion POR expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
+    | PALABRA_I {$$ = new id($1, @1.first_line, @1.first_column);}
 ;

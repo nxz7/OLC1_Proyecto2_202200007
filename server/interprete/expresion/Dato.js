@@ -9,7 +9,7 @@ class Dato extends Expresion{
         //this.columna = columna;
     }
 
-    interpretar(entorno){
+    interpretar(entorno,tablaDeSimbolos){
         switch(this.tipo){
             case 'INT': return Number(this.valor);
             case 'STD::STRING': return this.valor;
