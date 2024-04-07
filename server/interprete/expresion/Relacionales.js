@@ -13,6 +13,8 @@ class Relacionales extends Expresion{
         let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
         let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
 
+
+
         if(this.operador == "=="){
             //INT - INT
             if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){

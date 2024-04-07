@@ -15,6 +15,8 @@ comentario_una [\/][\/][^\n]+;
 // -----> Reglas Lexicas
 "cout"       {return "COUT";}
 "if"            {return "IF";}
+"++"             {return "MASmas";}
+"--"             {return "MENOSmenos";}
 "=="             {return "dosIgual";}
 "<="             {return  "menorIgual"; }
 ">="             {return  "mayorIgual"; }
@@ -80,19 +82,21 @@ comentario_una [\/][\/][^\n]+;
     const Logicos = require("../interprete/expresion/Logicos.js");
     const Not = require("../interprete/expresion/Not.js");
     const Negativo = require("../interprete/expresion/Negativo.js");
+    const IncDec = require("../interprete/expresion/IncDec.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
 
     const Print = require("../interprete/instruccion/Print.js");
     const If = require("../interprete/instruccion/If.js");
     const Variable = require("../interprete/instruccion/Variable.js");
-
+const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
     const tablaDeErrores = new tablaError();
 %}
 
+%left  'MASmas', 'MENOSmenos'
 %left   'interrogracion'
 %left   'oSigno'
 %left   'And'
@@ -120,6 +124,7 @@ listainstr
 instruccion
     : variable       {$$ = $1;}
     | instrif       {$$ = $1;}
+    | exp_InDec      {$$ = $1;}
 	| print         { $$ = $1; }   
 	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
@@ -196,5 +201,13 @@ expresion
     | expresion oSigno expresion       {$$ = new Logicos($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion And expresion       {$$ = new Logicos($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion interrogracion expresion  dosPuntos expresion   {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
+    | expresion MASmas   {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
+    | expresion MENOSmenos {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
     | PALABRA_I {$$ = new id($1, @1.first_line, @1.first_column);}
+    
+;
+
+exp_InDec
+    : PALABRA_I MASmas  puntoycoma  {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
+    | PALABRA_I MENOSmenos puntoycoma {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
 ;

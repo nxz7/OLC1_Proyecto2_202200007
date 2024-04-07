@@ -11,6 +11,8 @@ class Not extends Expresion{
 
         let valor = this.expresion.interpretar(entorno,tablaDeSimbolos);
         //console.log("tipozz: ", this.expresion.tipo);
+
+
         if(this.expresion.tipo === "BOOL"){
             this.tipo = TipoDato.BOOLEAN;
             this.valor = !valor;

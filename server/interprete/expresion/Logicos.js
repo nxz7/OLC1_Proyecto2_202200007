@@ -14,6 +14,7 @@ class Logico extends Expresion{
         let expIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
     
 
+
         if(this.operador == "&&"){
             if (this.expDer.tipo=="BOOL" && this.expIzq.tipo=="BOOL" ) {
                 let resultado = expIzq && expDer;

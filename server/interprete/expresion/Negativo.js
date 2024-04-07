@@ -11,6 +11,8 @@ class Negativo extends Expresion{
 
         this.expresion.interpretar(entorno,tablaDeSimbolos);
 
+
+
         if(this.expresion.tipo === "INT"){
             this.tipo = TipoDato.INT;
             this.valor = -1 * this.expresion.valor;

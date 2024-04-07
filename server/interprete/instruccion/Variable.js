@@ -5,7 +5,7 @@ const simb = require('../Simbolos/simb.js');
 
 class Variable extends Instruccion{
     constructor(id, tipo, expresion, fila, columna){
-        super(TipoInstr.DECLARAR, fila, columna);
+        super(TipoInstr.VARIABLE, fila, columna);
         this.expresion = expresion;
         this.id = id;
         this.tipo = tipo;

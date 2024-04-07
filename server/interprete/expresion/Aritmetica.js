@@ -10,8 +10,11 @@ class Aritmetica extends Expresion{
     }
 
     interpretar(entorno,tablaDeSimbolos){
+
+
         let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
         let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
+
 
         if(this.operador == "+"){
             //INT - INT

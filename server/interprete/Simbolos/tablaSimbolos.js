@@ -47,6 +47,43 @@ class tablaSimbolos {
         return this.tablaSimbolos;
     }
 
+    getSimboloIndex(nombre, entorno) {
+        if (entorno.nombre === "GLOBAL") {
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                    return i;
+                }
+            }
+            console.log("Variable no existe");
+            return -1;
+        } else {
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === entorno.nombre) {
+                    return i;
+                }
+            }
+            
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                    return i;
+                }
+            }
+            console.log("Variable no existe");
+            return -1;
+        }
+    }
+
+    
+    actualizarValor(index, nuevoValor) {
+        if (index !== -1) {
+            this.tablaSimbolos[index].valor = nuevoValor;
+            console.log(`Valor de ${this.tablaSimbolos[index].id} actualizado a ${nuevoValor}`);
+        } else {
+            console.log("No se puede actualizar el valor, la variable no existe.");
+        }
+    }
+
+
     reporteTabla() {
         let html = `
             <style>
