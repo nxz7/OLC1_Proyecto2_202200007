@@ -14,13 +14,13 @@ class Negativo extends Expresion{
         if(this.expresion.tipo === "INT"){
             this.tipo = TipoDato.INT;
             this.valor = -1 * this.expresion.valor;
-            console.log("tipo: ", this.tipo);
+            //console.log("tipo: ", this.tipo);
             return Number(this.valor);
         }
         if(this.expresion.tipo === "DOUBLE"){
             this.tipo = TipoDato.DOUBLE;
             this.valor = -1.0 * this.expresion.valor;
-            console.log("tipo: ", this.tipo);
+            //console.log("tipo: ", this.tipo);
             return parseFloat(this.valor);
         }
 

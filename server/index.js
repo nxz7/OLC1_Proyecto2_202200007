@@ -33,13 +33,14 @@ cout<< "---prueba---- cinco-";
 cout<< "---aca ------";
 cout<< cinco +"hola";
 cout<< "--------------";
-bool cond1= 1>1;
+bool cond1= 1>0;
 bool cond2= 1>=5;
 cout<< "------logico-----";
 cout<< 1<5 || "hola"=="holaa";
 cout<< "--------------";
 cout<< 5>=5 ? 25-5:2*cinco;
-
+cout<< !cond1;
+cout<< -1;
 `;
 
 let resultado = analizador.parse(entrada); // lo del parser

@@ -78,6 +78,7 @@ comentario_una [\/][\/][^\n]+;
         const id = require("../interprete/expresion/id.js");
     const Ternario = require("../interprete/expresion/ternario.js");
     const Logicos = require("../interprete/expresion/Logicos.js");
+    const Not = require("../interprete/expresion/Not.js");
     const Negativo = require("../interprete/expresion/Negativo.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
@@ -95,7 +96,7 @@ comentario_una [\/][\/][^\n]+;
 %left   'interrogracion'
 %left   'oSigno'
 %left   'And'
-%left 'exclamacion'
+%right UEX
 %left 'dosIgual','menorQue','mayorQue','menorIgual','mayorIgual','diferente'
 %left 'MAS','MENOS'
 %left 'POR','DIVIDIR', 'modulo'
@@ -175,6 +176,7 @@ tipos
 
 expresion
 	: MENOS expresion %prec UMENOS  { $$ = new Negativo($2, @1.first_line, @1.first_column); }
+    | exclamacion expresion %prec UEX {$$ = new Not($2, @1.first_line, @1.first_column);}
     | CADENA    { $$ = new Dato($1, TipoDato.CADENA, @1.first_line, @1.first_column); }
     | CHAR  { $$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
     | BOOLEAN   { $$ = new Dato($1, TipoDato.BOOLEAN, @1.first_line, @1.first_column); }
