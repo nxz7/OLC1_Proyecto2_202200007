@@ -19,6 +19,8 @@ comentario_una [\/][\/][^\n]+;
 "<="             {return  "menorIgual"; }
 ">="             {return  "mayorIgual"; }
 "!="             {return  "diferente"; }
+"&&"             {return  "And"; }
+"||"             {return  "oSigno"; }
 "+"             {return "MAS";}
 "*"             {return "POR";}
 "="             {return "IGUAL";}
@@ -26,6 +28,7 @@ comentario_una [\/][\/][^\n]+;
 "-"             {return "MENOS";}
 "pow"           {return "potencia";}
 "%"             {return "modulo";}
+":"             {return "dosPuntos";}
 
 "double"            {return "dobTipo"; }
 "int"            {return "intTipo"; }
@@ -41,7 +44,7 @@ comentario_una [\/][\/][^\n]+;
 "<"             {return  "menorQue"; }
 ">"             {return  "mayorQue"; }
 "!"             {return  "exclamacion"; }
-
+"?"             {return  "interrogracion"; }
 
 
 [0-9]+[.][0-9]+\b    return 'DOUBLE';
@@ -73,6 +76,7 @@ comentario_una [\/][\/][^\n]+;
     const { TipoDato } = require("../interprete/Expresion.js");
     const Dato = require("../interprete/expresion/Dato.js");
         const id = require("../interprete/expresion/id.js");
+    const Ternario = require("../interprete/expresion/Ternario.js");
     const Negativo = require("../interprete/expresion/Negativo.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
@@ -85,8 +89,12 @@ comentario_una [\/][\/][^\n]+;
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
     const tablaDeErrores = new tablaError();
-%}    
+%}
 
+%left   'interrogracion'
+%left   'oSigno'
+%left   'And'
+%left 'exclamacion'
 %left 'dosIgual','menorQue','mayorQue','menorIgual','mayorIgual','diferente'
 %left 'MAS','MENOS'
 %left 'POR','DIVIDIR', 'modulo'
@@ -182,5 +190,6 @@ expresion
     | expresion MENOS expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion MAS expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion POR expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
+    | expresion interrogracion expresion  dosPuntos expresion   {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
     | PALABRA_I {$$ = new id($1, @1.first_line, @1.first_column);}
 ;

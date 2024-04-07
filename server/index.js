@@ -33,7 +33,8 @@ cout<< "---prueba---- cinco-";
 cout<< "---aca ------";
 cout<< cinco +"hola";
 cout<< "--------------";
-cout<< -14;
+
+cout<< 5>5 ? 25-5:2*cinco;
 
 
 `;
