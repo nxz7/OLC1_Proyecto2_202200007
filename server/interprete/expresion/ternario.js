@@ -22,6 +22,7 @@ class Ternario extends Expresion{
         }
         else{
             console.log("Error Semántico: dentro operador ternario - recuerde la condicion debe dar un resultado booleano (true/false)")
+            this.tipo=TipoDato.ERROR;
             return this;
         }
 

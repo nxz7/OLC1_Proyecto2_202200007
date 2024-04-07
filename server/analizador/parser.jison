@@ -76,7 +76,8 @@ comentario_una [\/][\/][^\n]+;
     const { TipoDato } = require("../interprete/Expresion.js");
     const Dato = require("../interprete/expresion/Dato.js");
         const id = require("../interprete/expresion/id.js");
-    const Ternario = require("../interprete/expresion/Ternario.js");
+    const Ternario = require("../interprete/expresion/ternario.js");
+    const Logicos = require("../interprete/expresion/Logicos.js");
     const Negativo = require("../interprete/expresion/Negativo.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
@@ -190,6 +191,8 @@ expresion
     | expresion MENOS expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion MAS expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion POR expresion       {$$ = new Aritmetica($1, $2, $3, @1.first_line, @1.first_column);}
+    | expresion oSigno expresion       {$$ = new Logicos($1, $2, $3, @1.first_line, @1.first_column);}
+    | expresion And expresion       {$$ = new Logicos($1, $2, $3, @1.first_line, @1.first_column);}
     | expresion interrogracion expresion  dosPuntos expresion   {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
     | PALABRA_I {$$ = new id($1, @1.first_line, @1.first_column);}
 ;

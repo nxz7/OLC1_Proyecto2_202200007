@@ -24,7 +24,7 @@ class Negativo extends Expresion{
             return parseFloat(this.valor);
         }
 
-        console.log("Error Semántico: Error con el negativo [-] )")
+        console.log("Error Semántico: Error con el negativo [-] ")
         return this;
     }
 
