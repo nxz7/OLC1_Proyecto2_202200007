@@ -11,6 +11,8 @@ let entrada = `
 cout<< "-------";
 char cuatro= '4';
 int cinco= 5;
+
+cout<< cinco;
 bool ff= 1<5 && "hola"=="hola";
 
 cout<< "-------";
@@ -39,6 +41,24 @@ cout<< "--------------";
 cout<< a--;
 cout<< "--------------";
 cout<< !ff;
+int vect5[]=[1,2,3,4];
+bool vect2[]=new bool[5];
+cout<< "--------------";
+cout<< vect1;
+cout<< "--------------";
+cout<< vect1[2];
+cout<< "--------------";
+double vect3[][]=[[1,2],[4,5]];
+
+bool prs[][]= new bool[4][4];
+
+cout<< prs;
+cout<< "--------------";
+int valor4 = vect5[1];
+cout<< "--------------";
+double valor5 = vect3[1][1];
+cout << valor5 +5+5;
+
 `;
 
 let resultado = analizador.parse(entrada); // lo del parser

@@ -15,6 +15,7 @@ comentario_una [\/][\/][^\n]+;
 // -----> Reglas Lexicas
 "cout"       {return "COUT";}
 "if"            {return "IF";}
+"[][]"             {return "dosCor";}
 "++"             {return "MASmas";}
 "--"             {return "MENOSmenos";}
 "=="             {return "dosIgual";}
@@ -31,7 +32,7 @@ comentario_una [\/][\/][^\n]+;
 "pow"           {return "potencia";}
 "%"             {return "modulo";}
 ":"             {return "dosPuntos";}
-
+"new"            {return "new"; }
 "double"            {return "dobTipo"; }
 "int"            {return "intTipo"; }
 "char"            {return "charTipo"; }
@@ -47,6 +48,11 @@ comentario_una [\/][\/][^\n]+;
 ">"             {return  "mayorQue"; }
 "!"             {return  "exclamacion"; }
 "?"             {return  "interrogracion"; }
+","             {return  "coma"; }
+"["             {return  "abrirCor"; }
+"]"             {return  "cerrarCor"; }
+
+
 
 
 [0-9]+[.][0-9]+\b    return 'DOUBLE';
@@ -85,15 +91,25 @@ comentario_una [\/][\/][^\n]+;
     const IncDec = require("../interprete/expresion/IncDec.js");
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
+    const id_arreglo = require("../interprete/expresion/id_arreglo.js");
 
     const Print = require("../interprete/instruccion/Print.js");
     const If = require("../interprete/instruccion/If.js");
     const Variable = require("../interprete/instruccion/Variable.js");
 const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
+    const Vector = require("../interprete/instruccion/Vector.js");
+   const Vector2D = require("../interprete/instruccion/Vector2D.js");
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
     const tablaDeErrores = new tablaError();
+    let arreglo = "";
+    let tipoArreglo = "";
+    let accesoUno = "";
+    let accesoDos = "";
+    let totalDos = null;
+    let datoDos = null;
+    let mat2=null;
 %}
 
 %left  'MASmas', 'MENOSmenos'
@@ -138,6 +154,7 @@ instrif
 	: IF abrirPar expresion cerrarPar abrirLLAVE listainstr  cerrarLLAVE    	{$$ = new If($3, $6, @1.first_line, @1.first_column);}
 ;
 
+
 variable
     : tipos PALABRA_I t_declaracion {  
         if ($3 === "revisar") {
@@ -159,17 +176,54 @@ variable
         } else {
         console.log("error sintactico");
         }
-        } else {
+        } 
+        else if (arreglo=="1D1"){
+            $$ = new Vector($2,$1,$1,"LISTA",$3,@1.first_line, @1.first_column);
+            arreglo=="";
+        } 
+        else if (arreglo=="1D2"){
+            $$ = new Vector($2,$1,tipoArreglo,"DEF",$3,@1.first_line, @1.first_column);
+            arreglo=="";
+            tipoArreglo="";
+        } 
+        else if (arreglo=="matriz1"){
+           $$ = new Vector2D($2,$1,tipoArreglo,"DEF",$3,datoDos,@1.first_line, @1.first_column);
+           arreglo=="";
+            tipoArreglo="";
+           datoDos=null;
+        }
+        else if (arreglo=="matriz2"){
+            $$ = new Vector2D($2,$1,$1,"LISTA",$3,mat2,@1.first_line, @1.first_column);
+            arreglo=="";
+            tipoArreglo="";
+            mat2=null;
+        }  
+        else { 
         $$ = new Variable($2, $1, $3, @1.first_line, @1.first_column);
         }
 
         }
 ;
 
+
 t_declaracion
-    :IGUAL expresion puntoycoma { $$ = $2 }
-    |puntoycoma { $$ = "revisar" }
+    :IGUAL expresion puntoycoma { $$ = $2; }
+    |puntoycoma { $$ = "revisar"; }
+    |abrirCor cerrarCor IGUAL arreglo { $$ = $4; }
+    |dosCor IGUAL doble_arreglo { $$ = $3; }
     ;
+
+doble_arreglo
+    :new tipos abrirCor expresion cerrarCor abrirCor expresion cerrarCor puntoycoma  { arreglo="matriz1"; tipoArreglo=$2; datoDos=$7; $$=$4; }
+    | abrirCor abrirCor LISTA_ELEMENTOS cerrarCor coma abrirCor LISTA_ELEMENTOS cerrarCor cerrarCor puntoycoma {arreglo="matriz2"; mat2=$7; $$ = $3; }
+;
+
+
+
+arreglo
+    : new tipos abrirCor expresion cerrarCor puntoycoma {arreglo="1D2"; tipoArreglo=$2; $$=$4;}
+    | abrirCor LISTA_ELEMENTOS cerrarCor puntoycoma { arreglo="1D1";$$=$2;}
+;
 
 tipos
     :dobTipo {$$="DOUBLE";}
@@ -178,6 +232,14 @@ tipos
     |boolTipo {$$="BOOL";}
     |stringTipo {$$="STD::STRING";}
 ;
+
+
+
+LISTA_ELEMENTOS
+    :LISTA_ELEMENTOS coma DATOS {$$ = $1; $$.push($3); }
+    |DATOS {$$ = []; $$.push($1);}
+;
+
 
 expresion
 	: MENOS expresion %prec UMENOS  { $$ = new Negativo($2, @1.first_line, @1.first_column); }
@@ -203,11 +265,53 @@ expresion
     | expresion interrogracion expresion  dosPuntos expresion   {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
     | expresion MASmas   {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
     | expresion MENOSmenos {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
-    | PALABRA_I {$$ = new id($1, @1.first_line, @1.first_column);}
+    | PALABRA_I palabras {
+        arreglo ="";
+        if(totalDos!=null){
+            $$= new id_arreglo($1,$2,totalDos, @1.first_line, @1.first_column);
+            totalDos=null;
+        }
+        else if(accesoUno=="unaDim" && totalDos==null){
+            $$= new id_arreglo($1,$2,null, @1.first_line, @1.first_column);
+            accesoUno="";
+        }
+        else{
+        $$ = new id($1, @1.first_line, @1.first_column);
+    }
+    }
     
+;
+
+palabras
+    :abrirCor DATOS cerrarCor amb_palabras {
+        if (accesoDos =="dosDim"){
+            //totalDos=$4;
+            $$=$2;
+        }else{
+            accesoUno="unaDim";
+            $$=$2;
+            totalDos=null;
+        }
+    }
+    | {$$=null;}
+;
+
+amb_palabras
+    : abrirCor DATOS cerrarCor {accesoDos="dosDim";totalDos=$2;$$=$2;}
+    | {$$=null;}
 ;
 
 exp_InDec
     : PALABRA_I MASmas  puntoycoma  {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
     | PALABRA_I MENOSmenos puntoycoma {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
+;
+
+
+DATOS
+    : CADENA    { $$ = new Dato($1, TipoDato.CADENA, @1.first_line, @1.first_column); }
+    | CHAR  { $$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
+    | BOOLEAN   { $$ = new Dato($1, TipoDato.BOOLEAN, @1.first_line, @1.first_column); }
+    | DOUBLE    { $$ = new Dato($1, TipoDato.DOUBLE, @1.first_line, @1.first_column); }   
+    | INT   { $$ = new Dato($1, TipoDato.INT, @1.first_line, @1.first_column); }
+    | PALABRA_I {$$ = new id($1, @1.first_line, @1.first_column);}
 ;

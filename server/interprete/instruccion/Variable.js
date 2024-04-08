@@ -17,6 +17,7 @@ class Variable extends Instruccion{
         //console.log("1");
         if(this.expresion.tipo != this.tipo){
             console.log("Error semántico: el tipo de la variable no coincide con el tipo de la expresión");
+            
             return this;
         }
         //console.log("VALOR: ", valor);

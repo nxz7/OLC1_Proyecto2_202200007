@@ -12,7 +12,8 @@ const TipoInstr = {
     PRINT: 'PRINT',
     IF: 'IF',
     Variable: 'Variable',
-    INC_DEC: 'INC_DEC'
+    INC_DEC: 'INC_DEC',
+    ARREGLO: 'Arreglo',
 }
 
 module.exports = {Instruccion, TipoInstr}

@@ -13,7 +13,7 @@ class tablaSimbolos {
     
 
     getSimbolo(nombre, entorno) {
-        
+    
         if (entorno.nombre === "GLOBAL") 
         {
             //console.log("entorno global UNO");
@@ -109,6 +109,7 @@ class tablaSimbolos {
                     <th>Fila</th>
                     <th>Columna</th>
                     <th>ENTORNO</th>
+                    <th>estructura</th>
                 </tr>`;
         
         for (let i = 0; i < this.tablaSimbolos.length; i++) {
@@ -120,6 +121,7 @@ class tablaSimbolos {
                     <td>${this.tablaSimbolos[i].fila}</td>
                     <td>${this.tablaSimbolos[i].columna}</td>
                     <td>${this.tablaSimbolos[i].entorno}</td>
+                    <td>${this.tablaSimbolos[i].tipoVar}</td>
                 </tr>`;
         }
         
