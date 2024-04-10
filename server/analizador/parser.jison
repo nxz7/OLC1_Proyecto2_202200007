@@ -14,6 +14,7 @@ comentario_una [\/][\/][^\n]+;
 %%
 // -----> Reglas Lexicas
 "cout"       {return "COUT";}
+"endl"       {return "endl";}
 "if"            {return "IF";}
 "[][]"             {return "dosCor";}
 "++"             {return "MASmas";}
@@ -92,6 +93,8 @@ comentario_una [\/][\/][^\n]+;
     const Aritmetica = require("../interprete/expresion/Aritmetica.js");
     const Relacionales = require("../interprete/expresion/Relacionales.js");
     const id_arreglo = require("../interprete/expresion/id_arreglo.js");
+    const Potencia = require("../interprete/expresion/Potencia.js");
+    const Casteos = require("../interprete/expresion/Casteos.js");
 
     const Print = require("../interprete/instruccion/Print.js");
     const If = require("../interprete/instruccion/If.js");
@@ -99,11 +102,16 @@ comentario_una [\/][\/][^\n]+;
 const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     const Vector = require("../interprete/instruccion/Vector.js");
    const Vector2D = require("../interprete/instruccion/Vector2D.js");
+   const Funcion = require("../interprete/instruccion/Funcion.js");
+      const run_funcion = require("../interprete/instruccion/run_funcion.js");
+
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
     const tablaDeErrores = new tablaError();
+    let par =[];
     let arreglo = "";
+
     let tipoArreglo = "";
     let accesoUno = "";
     let accesoDos = "";
@@ -111,6 +119,7 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     let datoDos = null;
     let mat2=null;
 %}
+
 
 %left  'MASmas', 'MENOSmenos'
 %left   'interrogracion'
@@ -120,6 +129,7 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
 %left 'dosIgual','menorQue','mayorQue','menorIgual','mayorIgual','diferente'
 %left 'MAS','MENOS'
 %left 'POR','DIVIDIR', 'modulo'
+%left 'abrirPar' 'cerrarPar'
 %right UMENOS
 
 // -------> Simbolo Inicial
@@ -140,14 +150,19 @@ listainstr
 instruccion
     : variable       {$$ = $1;}
     | instrif       {$$ = $1;}
-    | exp_InDec      {$$ = $1;}
+    | exp_InDec      {$$ = $1;}  //tambien tiene lo de llamadas a metodos/func
 	| print         { $$ = $1; }   
 	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 
 print 
-    : COUT menorQue menorQue expresion puntoycoma   { $$ = new Print($4); }
+    : COUT menorQue menorQue expresion tipos_print  { $$ = new Print($4,$5); }
+;
+
+tipos_print
+    : menorQue menorQue endl puntoycoma { $$ = "salto"; }
+    |puntoycoma { $$ = null; }
 ;
 
 instrif
@@ -197,7 +212,11 @@ variable
             arreglo=="";
             tipoArreglo="";
             mat2=null;
-        }  
+        } else if (arreglo=="FUNCION") {
+            $$ = new Funcion ($1,$2,par,$3,@1.first_line, @1.first_column);
+            arreglo="";
+            par ="";
+        }
         else { 
         $$ = new Variable($2, $1, $3, @1.first_line, @1.first_column);
         }
@@ -211,7 +230,14 @@ t_declaracion
     |puntoycoma { $$ = "revisar"; }
     |abrirCor cerrarCor IGUAL arreglo { $$ = $4; }
     |dosCor IGUAL doble_arreglo { $$ = $3; }
+    |abrirPar lista_int cerrarPar abrirLLAVE listainstr  cerrarLLAVE {par = $2 ; arreglo="FUNCION"; $$ =$5;}
     ;
+
+lista_int
+    : lista_int coma tipos PALABRA_I {$$ = $1; $$.push($3); $$.push($4);}
+    | tipos PALABRA_I {$$ = []; $$.push($1); $$.push($2);}
+;
+
 
 doble_arreglo
     :new tipos abrirCor expresion cerrarCor abrirCor expresion cerrarCor puntoycoma  { arreglo="matriz1"; tipoArreglo=$2; datoDos=$7; $$=$4; }
@@ -265,6 +291,8 @@ expresion
     | expresion interrogracion expresion  dosPuntos expresion   {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
     | expresion MASmas   {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
     | expresion MENOSmenos {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
+    | potencia abrirPar expresion coma expresion cerrarPar {$$=new Potencia($3,$5,@1.first_line, @1.first_column);}
+    | abrirPar parentesis_exp {$$=$2;}
     | PALABRA_I palabras {
         arreglo ="";
         if(totalDos!=null){
@@ -280,6 +308,11 @@ expresion
     }
     }
     
+;
+
+parentesis_exp
+    :expresion  cerrarPar {$$=$1;}
+    |tipos cerrarPar expresion {$$=new Casteos($3,$1,@1.first_line, @1.first_column);}
 ;
 
 palabras
@@ -304,7 +337,13 @@ amb_palabras
 exp_InDec
     : PALABRA_I MASmas  puntoycoma  {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
     | PALABRA_I MENOSmenos puntoycoma {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
+    | PALABRA_I abrirPar lista_par cerrarPar puntoycoma {$$= new run_funcion($1,$3, @1.first_line, @1.first_column);}
 ;
+
+lista_par
+    :lista_par coma expresion {$$ = $1; $$.push($3); }
+    |expresion {$$ = []; $$.push($1);}
+    ;
 
 
 DATOS

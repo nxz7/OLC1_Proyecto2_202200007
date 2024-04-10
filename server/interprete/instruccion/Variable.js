@@ -1,5 +1,6 @@
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
+const StringBuilder = require('../StringBuilder.js');
 
 const simb = require('../Simbolos/simb.js');
 
@@ -11,12 +12,15 @@ class Variable extends Instruccion{
         this.tipo = tipo;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
 
-        let valor=this.expresion.interpretar(entorno,tablaDeSimbolos);
+        let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
         //console.log("1");
         if(this.expresion.tipo != this.tipo){
             console.log("Error semántico: el tipo de la variable no coincide con el tipo de la expresión");
+            sb.append("\n");
+            sb.append("Error semántico: el tipo de la variable no coincide con el tipo de la expresión");
+            sb.append("\n");
             
             return this;
         }

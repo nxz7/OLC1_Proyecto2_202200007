@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Logico extends Expresion{
     
@@ -9,7 +10,7 @@ class Logico extends Expresion{
         this.operador = operador;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         let expDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
         let expIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
     
@@ -21,7 +22,10 @@ class Logico extends Expresion{
                 return resultado;
             }
             else{
-                console.log("Error Semántico: dentro operador logico && - recuerde ambas exp debe dar un resultado booleano (true/false)")
+                console.log("Error Semántico: dentro operador logico && - recuerde ambas exp debe dar un resultado booleano (true/false)");
+                sb.append("\n");
+                sb.append("Error Semántico: dentro operador logico && - recuerde ambas exp debe dar un resultado booleano (true/false)");
+                sb.append("\n");
                 this.tipo=TipoDato.ERROR;
                 return this;
             }
@@ -33,13 +37,19 @@ class Logico extends Expresion{
                 return resultado;
             }
             else{
-                console.log("Error Semántico: dentro operador logico || - recuerde ambas exp debe dar un resultado booleano (true/false)")
+                console.log("Error Semántico: dentro operador logico || - recuerde ambas exp debe dar un resultado booleano (true/false)");
+                sb.append("\n");
+                sb.append("Error Semántico: dentro operador logico || - recuerde ambas exp debe dar un resultado booleano (true/false)");
+                sb.append("\n");
                 this.tipo=TipoDato.ERROR;
                 return this;
             }
         }
         else{
-            console.log("Error Semántico: dentro operador logico - recuerde ambas exp debe dar un resultado booleano (true/false)")
+            console.log("Error Semántico: dentro operador logico - recuerde ambas exp debe dar un resultado booleano (true/false)");
+            sb.append("\n");
+                sb.append("Error Semántico: dentro operador logico - recuerde ambas exp debe dar un resultado booleano (true/false)");
+                sb.append("\n");
             this.tipo=TipoDato.ERROR;
             return this;
         }

@@ -10,7 +10,10 @@ class tablaSimbolos {
         //console.log(this.tablaSimbolos);
     }
 
-    
+    limpiarVariablesTemporales() {
+        this.tablaSimbolos = this.tablaSimbolos.filter(variable => variable.tipoVar !== "temporal");
+        console.log("Variables temporales eliminadas.");
+    }
 
     getSimbolo(nombre, entorno) {
     
@@ -18,7 +21,7 @@ class tablaSimbolos {
         {
             //console.log("entorno global UNO");
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == "GLOBAL") {
                     return this.tablaSimbolos[i];
                 }
             }
@@ -27,13 +30,13 @@ class tablaSimbolos {
         } else {
             //console.log("ENTORNO: ", entorno.nombre);
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === entorno.nombre) {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == entorno.nombre) {
                     return this.tablaSimbolos[i];
                 }
             }
             
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == "GLOBAL") {
                     return this.tablaSimbolos[i];
                 }
             }
@@ -50,7 +53,7 @@ class tablaSimbolos {
     getSimboloIndex(nombre, entorno) {
         if (entorno.nombre === "GLOBAL") {
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == "GLOBAL") {
                     return i;
                 }
             }
@@ -58,13 +61,13 @@ class tablaSimbolos {
             return -1;
         } else {
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === entorno.nombre) {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == entorno.nombre) {
                     return i;
                 }
             }
             
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                if (this.tablaSimbolos[i].id === nombre && this.tablaSimbolos[i].entorno === "GLOBAL") {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == "GLOBAL") {
                     return i;
                 }
             }

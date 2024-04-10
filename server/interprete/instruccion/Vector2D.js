@@ -1,6 +1,6 @@
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
-
+const StringBuilder = require('../StringBuilder.js');
 const simb = require('../Simbolos/simb.js');
 
 class Vector2D extends Instruccion{
@@ -14,7 +14,7 @@ class Vector2D extends Instruccion{
         this.tipoArr = tipoArr;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         let arreglo = [];
         let arreglo2 = [];
         let arr2d = [];
@@ -23,13 +23,16 @@ class Vector2D extends Instruccion{
         
         if(this.tipo2!=this.tipo){
             console.log("Error semántico: cohesion en los tipos declarados[2d]");
+            sb.append("\n");
+            sb.append("Error semántico: cohesion en los tipos declarados[2d]");
+            sb.append("\n");
             this.tipo == "ERROR";
             return this;
         } else{
         
         if (this.tipoArr == "DEF"){
-            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos);
-            let valor2=this.expresionDos.interpretar(entorno,tablaDeSimbolos);
+            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
+            let valor2=this.expresionDos.interpretar(entorno,tablaDeSimbolos,sb);
             if (this.tipo == "DOUBLE") {
                 for (let i = 0; i < valor; i++) {
                     resultado.push(0.0);
@@ -100,19 +103,22 @@ class Vector2D extends Instruccion{
                 tablaDeSimbolos.agregarSimbolo(variable_ag1);
             }else{
                 console.log("Error semántico:en la declaracion de arreglo [variable]");
+                sb.append("\n");
+                sb.append("Error semántico:en la declaracion de arreglo [variable]");
+                sb.append("\n");
                 return this;
             }
             
 
         }else if(this.tipoArr == "LISTA"){
             this.expresion.forEach(instruccion => {
-                instruccion.interpretar(entorno,tablaDeSimbolos);
+                instruccion.interpretar(entorno,tablaDeSimbolos,sb);
                 arreglo.push(instruccion.valor);
     
             });
 
             this.expresionDos.forEach(instruccion => {
-                instruccion.interpretar(entorno,tablaDeSimbolos);
+                instruccion.interpretar(entorno,tablaDeSimbolos,sb);
                 arreglo2.push(instruccion.valor);
     
             });

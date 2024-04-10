@@ -2,6 +2,7 @@ const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 
 const simb = require('../Simbolos/simb.js');
+const StringBuilder = require('../StringBuilder.js');
 
 class inst_IncDec extends Instruccion{
     constructor(id, operador,tipo, fila, columna){
@@ -10,7 +11,7 @@ class inst_IncDec extends Instruccion{
         this.operador = operador;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
 
         let encontrada = tablaDeSimbolos.getSimbolo(this.id,entorno);
         let index = tablaDeSimbolos.getSimboloIndex(this.id,entorno);
@@ -31,6 +32,9 @@ class inst_IncDec extends Instruccion{
                 else{
                     this.tipo == "ERROR";
                     console.log("Error Semántico: [++]TIENE QUE SER VARIABLE NUMERICA");
+                    sb.append("\n");
+                sb.append("Error Semántico: [++]TIENE QUE SER VARIABLE NUMERICA");
+                sb.append("\n");
                     return this.valor;
                 }
     
@@ -50,11 +54,17 @@ class inst_IncDec extends Instruccion{
                 else{
                     this.tipo == "ERROR";
                     console.log("Error Semántico: [--]TIENE QUE SER VARIABLE NUMERICA");
+                    sb.append("\n");
+                sb.append("Error Semántico: [--]TIENE QUE SER VARIABLE NUMERICA");
+                sb.append("\n");
                     return this.valor;
                 }
 
             }else{
                 console.log("Error Semántico: operando no valido");
+                sb.append("\n");
+                sb.append("Error Semántico:operando no valido");
+                sb.append("\n");
                 return this;
             
             }
@@ -62,6 +72,9 @@ class inst_IncDec extends Instruccion{
             }
         else {
             console.log("Error semántico: la variable no existe");
+            sb.append("\n");
+                sb.append("Error semántico: la variable no existe");
+                sb.append("\n");
             return this;
         }
     }

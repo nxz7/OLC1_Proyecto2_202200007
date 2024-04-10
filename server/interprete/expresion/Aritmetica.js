@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Aritmetica extends Expresion{
     constructor(expIzq, operador, expDer, fila, columna){
@@ -9,11 +10,11 @@ class Aritmetica extends Expresion{
 
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
 
 
-        let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
-        let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
+        let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos,sb);
+        let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos,sb);
 
 
         if(this.operador == "+"){
@@ -106,6 +107,9 @@ class Aritmetica extends Expresion{
             else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
+                sb.append("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
                 return this.valor;
             }
         }
@@ -154,6 +158,9 @@ class Aritmetica extends Expresion{
             else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
+                sb.append("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
                 return this.valor;
             }
         }
@@ -217,6 +224,9 @@ class Aritmetica extends Expresion{
         else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
+                sb.append("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
                 return this.valor;
             }
 
@@ -265,6 +275,9 @@ class Aritmetica extends Expresion{
             else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
+                sb.append("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
                 return this.valor;
             }
         }
@@ -289,12 +302,18 @@ class Aritmetica extends Expresion{
             else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: Error de tipo de dato");
+                sb.append("\n");
+                sb.append("Error Semántico: Error de tipo de dato");
+                sb.append("\n");
                 return this.valor;
             }
         }
         else{
             this.tipo == "ERROR";
             console.log("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+            sb.append("\n");
+                sb.append("Error Semántico: Error de tipo SIGNO ARITMETICO y DATOS A OPERAR");
+                sb.append("\n");
             return this.valor;
         }
 

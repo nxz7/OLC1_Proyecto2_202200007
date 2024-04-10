@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class IncDec extends Expresion{
     
@@ -8,7 +9,7 @@ class IncDec extends Expresion{
         this.operador = operador;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         let expresion = this.expresion.interpretar(entorno,tablaDeSimbolos);
 
 
@@ -31,6 +32,9 @@ class IncDec extends Expresion{
             else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: [++]TIENE QUE SER VARIABLE NUMERICA");
+                sb.append("\n");
+                sb.append("Error Semántico: [++]TIENE QUE SER VARIABLE NUMERICA");
+                sb.append("\n");
                 return this.valor;
             }
 
@@ -52,12 +56,18 @@ class IncDec extends Expresion{
             } 
             else{
                 this.tipo == "ERROR";
-                console.log("Error Semántico: [++]TIENE QUE SER VARIABLE NUMERICA");
+                console.log("Error Semántico: [--]TIENE QUE SER VARIABLE NUMERICA");
+                sb.append("\n");
+                sb.append("Error Semántico: [--]TIENE QUE SER VARIABLE NUMERICA");
+                sb.append("\n");
                 return this.valor;
             }
         }
         else{
-            console.log("Error Semántico: al usar INC/DEC - recuerde que se suma o resta, por lo que solo var numericas")
+            console.log("Error Semántico: al usar INC/DEC - recuerde que se suma o resta, por lo que solo var numericas");
+            sb.append("\n");
+            sb.append("error semantico: al usar INC/DEC - recuerde que se suma o resta, por lo que solo var numericas");
+            sb.append("\n");
             this.tipo=TipoDato.ERROR;
             return this;
         }

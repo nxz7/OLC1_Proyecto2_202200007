@@ -1,5 +1,6 @@
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
+const StringBuilder = require('../StringBuilder.js');
 
 const simb = require('../Simbolos/simb.js');
 
@@ -13,18 +14,21 @@ class Vector extends Instruccion{
         this.tipoArr = tipoArr;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         let arreglo = [];
 
         
         if(this.tipo2!=this.tipo){
             console.log("Error semántico: cohesion en los tipos declarados");
+            sb.append("\n");
+            sb.append("Error semántico: cohesion en los tipos declarados");
+            sb.append("\n");
             this.tipo == "ERROR";
             return this;
         } else{
         
         if (this.tipoArr == "DEF"){
-            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos);
+            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
             if (this.tipo == "DOUBLE") {
                 let resultado = [];
                 for (let i = 0; i < valor; i++) {
@@ -75,13 +79,16 @@ class Vector extends Instruccion{
                 tablaDeSimbolos.agregarSimbolo(variable_ag5);
             }else{
                 console.log("Error semántico:en la declaracion de arreglo [variable]");
+                sb.append("\n");
+                sb.append("Error semántico:en la declaracion de arreglo [variable]");
+                sb.append("\n");
                 return this;
             }
             
 
         }else if(this.tipoArr == "LISTA"){
             this.expresion.forEach(instruccion => {
-                instruccion.interpretar(entorno,tablaDeSimbolos);
+                instruccion.interpretar(entorno,tablaDeSimbolos,sb);
                 arreglo.push(instruccion.valor);
     
             });

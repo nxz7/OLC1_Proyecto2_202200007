@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Relacionales extends Expresion{
     constructor(expIzq, operador, expDer, fila, columna){
@@ -9,7 +10,7 @@ class Relacionales extends Expresion{
 
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
         let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
 
@@ -205,6 +206,9 @@ class Relacionales extends Expresion{
         else{
                 this.tipo == "ERROR";
                 console.log("Error Semántico: Error en OP relacional, se intantan operar tipos de dato no permitidos");
+                sb.append("\n");
+                sb.append("Error Semántico: Error en OP relacional, se intantan operar tipos de dato no permitidos");
+                sb.append("\n");
                 return this.valor;
         }
         }

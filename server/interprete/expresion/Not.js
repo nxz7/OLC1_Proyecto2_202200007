@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Not extends Expresion{
     
@@ -7,10 +8,10 @@ class Not extends Expresion{
         this.expresion = expresion;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
 
         let valor = this.expresion.interpretar(entorno,tablaDeSimbolos);
-        //console.log("tipozz: ", this.expresion.tipo);
+        console.log("tipozz: ", this.expresion.tipo);
 
 
         if(this.expresion.tipo === "BOOL"){
@@ -20,7 +21,10 @@ class Not extends Expresion{
             return this.valor;
         }
         else{
-            console.log("Error Semántico: Error con el NOT - recurde valores booleanos ")
+            console.log("Error Semántico: Error con el NOT - recurde valores booleanos ");
+            sb.append("\n");
+                sb.append("Error Semántico: Error con el NOT - recurde valores booleanos ");
+                sb.append("\n");
             this.tipo=TipoDato.ERROR;
             return this;
         }

@@ -1,4 +1,6 @@
 const {Expresion} = require("../Expresion.js")
+const StringBuilder = require('../StringBuilder.js');
+
 
 class Dato extends Expresion{
     constructor(valor, tipo,linea, columna){
@@ -9,7 +11,7 @@ class Dato extends Expresion{
         //this.columna = columna;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         switch(this.tipo){
             case 'INT': return Number(this.valor);
             case 'STD::STRING': return this.valor;
@@ -23,7 +25,9 @@ class Dato extends Expresion{
                     } else if (lowerCaseValue === 'false') {
                         return this.valor = false;
                     } else {
+                        sb.append("Error Semántico -> VALOR BOOLEANO NO VALIDO");
                         throw new Error("Error Semántico -> VALOR BOOLEANO NO VALIDO: " + this.valor);
+
                     }
                     break;
 

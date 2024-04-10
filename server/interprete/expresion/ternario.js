@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Ternario extends Expresion{
     
@@ -9,7 +10,7 @@ class Ternario extends Expresion{
         this.expFalse = expFalse;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
         let expTrue = this.expTrue.interpretar(entorno,tablaDeSimbolos);
         let expFalse = this.expFalse.interpretar(entorno,tablaDeSimbolos);
         let condicion = this.condicion.interpretar(entorno,tablaDeSimbolos);
@@ -27,6 +28,9 @@ class Ternario extends Expresion{
         }
         else{
             console.log("Error Semántico: dentro operador ternario - recuerde la condicion debe dar un resultado booleano (true/false)")
+            sb.append("\n");
+            sb.append("Error Semántico: dentro operador ternario - recuerde la condicion debe dar un resultado booleano (true/false)");
+            sb.append("\n");
             this.tipo=TipoDato.ERROR;
             return this;
         }

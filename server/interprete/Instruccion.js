@@ -5,7 +5,7 @@ class Instruccion{
         this.columna = columna;
     }
 
-    interpretar(entorno,tablaDeSimbolos){}
+    interpretar(entorno,tablaDeSimbolos,sb){}
 }
 
 const TipoInstr = {
@@ -14,6 +14,7 @@ const TipoInstr = {
     Variable: 'Variable',
     INC_DEC: 'INC_DEC',
     ARREGLO: 'Arreglo',
+    FUNCION: 'FUNCION',
 }
 
 module.exports = {Instruccion, TipoInstr}

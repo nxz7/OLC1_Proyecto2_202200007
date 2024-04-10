@@ -1,4 +1,5 @@
 const { Expresion, TipoDato } = require("../Expresion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Negativo extends Expresion{
     
@@ -7,7 +8,7 @@ class Negativo extends Expresion{
         this.expresion = expresion;
     }
 
-    interpretar(entorno,tablaDeSimbolos){
+    interpretar(entorno,tablaDeSimbolos,sb){
 
         this.expresion.interpretar(entorno,tablaDeSimbolos);
 
@@ -26,7 +27,10 @@ class Negativo extends Expresion{
             return parseFloat(this.valor);
         }
 
-        console.log("Error Semántico: Error con el negativo [-] ")
+        console.log("Error Semántico: Error con el negativo [-] ");
+        sb.append("\n");
+                sb.append("Error Semántico: Error con el negativo [-] ");
+                sb.append("\n");
         return this;
     }
 

@@ -7,7 +7,9 @@ class Expresion{
         this.columna = columna;
     }
 
-    interpretar(entorno,tablaDeSimbolos){}
+    interpretar(entorno,tablaDeSimbolos,sb){
+
+    }
 
 }
 

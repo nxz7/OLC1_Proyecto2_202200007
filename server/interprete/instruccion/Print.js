@@ -1,24 +1,37 @@
 const { TipoDato } = require("../Expresion");
 const { Instruccion, TipoInstr } = require("../Instruccion");
+const StringBuilder = require('../StringBuilder.js');
 
 class Print extends Instruccion{
 
-    constructor(expresion, fila, columna){
+    constructor(expresion,salto, fila, columna){
         super(TipoInstr.PRINT, fila, columna);
         this.expresion = expresion;
+        this.salto = salto;
     }
 
-    interpretar(entorno,tablaDeSimbolos) {
+    interpretar(entorno,tablaDeSimbolos,sb) {
         try {
-            let valor = this.expresion.interpretar(entorno,tablaDeSimbolos);
+            let valor = this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
     
             if (this.expresion.tipo == "ERROR") {
                 console.log("Error Semántico >>>> intentar imprimir un error");
+                sb.append("\n");
+                sb.append("Error Semántico >>>> intentar imprimir un error");
+                sb.append("\n");
                 return;
             }
             console.log(valor);
+            if (this.salto == "salto"){
+                sb.append(valor);
+                sb.append("\n");
+
+            }else{
+            sb.append(valor);
+            }
         } catch (error) {
             console.error("ERROR", error);
+            console.log("aca");
         }
     }
     
