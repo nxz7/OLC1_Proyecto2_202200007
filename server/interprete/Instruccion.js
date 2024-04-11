@@ -15,7 +15,8 @@ const TipoInstr = {
     INC_DEC: 'INC_DEC',
     ARREGLO: 'Arreglo',
     FUNCION: 'FUNCION',
-    METODO: 'METODOS'
+    METODO: 'METODOS',
+    EXECUTE: 'EXECUTE'
 }
 
 module.exports = {Instruccion, TipoInstr}

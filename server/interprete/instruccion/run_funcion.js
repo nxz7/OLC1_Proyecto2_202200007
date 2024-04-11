@@ -16,9 +16,9 @@ class run_funcion extends Instruccion{
         //let funcionNombre = this.id;
 
         try {
-            console.log("a punto de entrar a funcion");
-            console.log(this.id);
-            console.log(tablaFunciones);
+            //console.log("a punto de entrar a funcion");
+            //console.log(this.id);
+            //console.log(tablaFunciones);
             let funcionNombre = new Entorno(this.id, entorno);
             let datos= [];
             let funcion = tablaFunciones.getFuncion(this.id, sb);

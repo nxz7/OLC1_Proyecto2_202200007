@@ -24,9 +24,20 @@ router.post('/Ejecutar', (req, res) => {
     console.log("resultado", resultado);
     res.send('Texto recibido correctamente');
     try {
+        // First iteration: Interpret all instructions except those with specific constructor name
         resultado.forEach(instruccion => {
-            instruccion.interpretar(entornoGlobal,tablaDeSimbolos,sb,tablaFunciones);
+            if (instruccion.constructor.name !== "execute") {
+                instruccion.interpretar(entornoGlobal, tablaDeSimbolos, sb, tablaFunciones);
+            }
         });
+    
+        // Second iteration: Interpret only instructions with specific constructor name
+        resultado.forEach(instruccion => {
+            if (instruccion.constructor.name === "execute") {
+                instruccion.interpretar(entornoGlobal, tablaDeSimbolos, sb, tablaFunciones);
+            }
+        });
+    
         console.log("final");
         console.log(sb.toString());
     } catch (error) {

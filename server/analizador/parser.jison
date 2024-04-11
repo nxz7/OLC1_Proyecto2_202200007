@@ -14,9 +14,11 @@
 [\/][\/][^\n]+ {/* se ignoran */}
 [[\/][\*][^\*\/]+[\*][\/]] {/* se ignoran */}
 "cout"       {return "COUT";}
+"execute"       {return "EXECUTE";}
 "void"       {return "VOID";}
 "endl"       {return "endl";}
 "if"            {return "IF";}
+"<<"             {return  "CorImp"; }
 "[][]"             {return "dosCor";}
 "++"             {return "MASmas";}
 "--"             {return "MENOSmenos";}
@@ -108,6 +110,7 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
       const run_funcion = require("../interprete/instruccion/run_funcion.js");
     const Varias_var = require("../interprete/instruccion/Varias_var.js");
     const Metodo = require("../interprete/instruccion/Metodo.js");
+    const execute = require("../interprete/instruccion/execute.js");
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
@@ -157,6 +160,7 @@ instruccion
     | print         { $$ = $1; } 
     | instrif       {$$ = $1;}
     | exp_InDec     {$$ = $1;}  //tambien tiene lo de llamadas a FUNC/metodos 
+    | run_exe       {$$ = $1;}
 	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 //METODOS CON VOID Y SIN PARAMETROS (tipoF, id, instrucciones,fila, columna)
@@ -164,13 +168,17 @@ metodos
     : VOID PALABRA_I abrirPar  cerrarPar abrirLLAVE listainstr  cerrarLLAVE { $$ = new Metodo($1,$2,$6,@1.first_line, @1.first_column);}
 ;
 
+run_exe 
+    : EXECUTE PALABRA_I abrirPar llamarMoF {$$ = new execute($2,$4, @1.first_line, @1.first_column);}
+;
+
 print 
-    : COUT menorQue menorQue expresion tipos_print  { $$ = new Print($4,$5, @1.first_line, @1.first_column); }
+    : COUT CorImp expresion tipos_print  { $$ = new Print($3,$4, @1.first_line, @1.first_column); }
 ;
 
 tipos_print
     : puntoycoma { $$ = null;  }
-    | menorQue menorQue endl puntoycoma { $$ = "salto"; }
+    | CorImp endl puntoycoma { $$ = "salto"; }
 ;
 
 instrif
