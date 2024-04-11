@@ -10,6 +10,10 @@ class tablaError {
         //console.log(errors);
     }
 
+    clearTablaError() {
+        this.tablaError = []; // BORRAR
+    }
+
     getTablaE() {
         return this.tablaError;
     }

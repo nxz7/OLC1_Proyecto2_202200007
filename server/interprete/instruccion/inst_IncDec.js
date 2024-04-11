@@ -11,7 +11,7 @@ class inst_IncDec extends Instruccion{
         this.operador = operador;
     }
 
-    interpretar(entorno,tablaDeSimbolos,sb){
+    interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
 
         let encontrada = tablaDeSimbolos.getSimbolo(this.id,entorno);
         let index = tablaDeSimbolos.getSimboloIndex(this.id,entorno);

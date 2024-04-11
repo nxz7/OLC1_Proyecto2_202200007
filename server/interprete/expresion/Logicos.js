@@ -11,8 +11,8 @@ class Logico extends Expresion{
     }
 
     interpretar(entorno,tablaDeSimbolos,sb){
-        let expDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
-        let expIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
+        let expDer = this.expDer.interpretar(entorno,tablaDeSimbolos,sb);
+        let expIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos,sb);
     
 
 

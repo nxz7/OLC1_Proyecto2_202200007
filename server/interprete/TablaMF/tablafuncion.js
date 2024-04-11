@@ -10,20 +10,19 @@ class tablaFunciones{
 
     }
 
-
     getFuncion(nombre, sb) {
-            for (let i = 0; i < this.tablaFunciones.length; i++) {
-                if (this.tablaFunciones[i].id == nombre) {
-                    return this.tablaFunciones[i];
-
-                }else {
-                    sb.append("\n");
-                    sb.append("Error semántico: la función no existe");
-                    sb.append("\n");
-                    return null;
-                }
-            } 
+        console.log(this.tablaFunciones.length);
+        for (let i = 0; i < this.tablaFunciones.length; i++) {
+            if (this.tablaFunciones[i].id.toLowerCase() == nombre.toLowerCase()) {
+                return this.tablaFunciones[i];
+            }
+        }
+        sb.append("\n");
+        sb.append("Error semántico: la función no existe");
+        sb.append("\n");
+        return null;
     }
+    
 
 
     getTabla() {

@@ -32,8 +32,8 @@ class id_arreglo extends Expresion{
             } 
             //console.log(dato);
             this.valor = dato.valor;
-            console.log("dato del valor:"+this.valor+"----");
-            //console.log(this.valor);
+            console.log("dato del valorUNO:"+this.valor+"----");
+            console.log(this.valor);
             return this.valor;
             }
         else if (encontrada!= null && this.index2 != null && this.index1 != null){

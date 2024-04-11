@@ -14,7 +14,7 @@ class Vector extends Instruccion{
         this.tipoArr = tipoArr;
     }
 
-    interpretar(entorno,tablaDeSimbolos,sb){
+    interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
         let arreglo = [];
 
         
@@ -28,7 +28,7 @@ class Vector extends Instruccion{
         } else{
         
         if (this.tipoArr == "DEF"){
-            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
+            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
             if (this.tipo == "DOUBLE") {
                 let resultado = [];
                 for (let i = 0; i < valor; i++) {
@@ -88,7 +88,7 @@ class Vector extends Instruccion{
 
         }else if(this.tipoArr == "LISTA"){
             this.expresion.forEach(instruccion => {
-                instruccion.interpretar(entorno,tablaDeSimbolos,sb);
+                instruccion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
                 arreglo.push(instruccion.valor);
     
             });

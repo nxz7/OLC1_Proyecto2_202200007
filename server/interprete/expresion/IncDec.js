@@ -10,7 +10,7 @@ class IncDec extends Expresion{
     }
 
     interpretar(entorno,tablaDeSimbolos,sb){
-        let expresion = this.expresion.interpretar(entorno,tablaDeSimbolos);
+        let expresion = this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
 
 
 

@@ -18,10 +18,12 @@ class id extends Expresion{
         //console.log("ENCONTRADA: ", encontrada);
         if (encontrada!= null){
                 let dato = new Dato(encontrada.valor, encontrada.tipo, this.fila, this.columna)
-                this.tipo = dato.tipo;
-                //console.log("esta aca");
-                //console.log("esta aca");
-                return dato.valor;
+                this.tipo = encontrada.tipo;
+                this.valor = encontrada.valor;
+                console.log("--------ACA----------------");
+                console.log(this.valor);
+                console.log(this);
+                return this.valor;
             }
         else {
             console.log("Error semántico: la variable no existe");

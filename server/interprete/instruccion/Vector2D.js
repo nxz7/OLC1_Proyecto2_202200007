@@ -14,7 +14,7 @@ class Vector2D extends Instruccion{
         this.tipoArr = tipoArr;
     }
 
-    interpretar(entorno,tablaDeSimbolos,sb){
+    interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
         let arreglo = [];
         let arreglo2 = [];
         let arr2d = [];
@@ -31,8 +31,8 @@ class Vector2D extends Instruccion{
         } else{
         
         if (this.tipoArr == "DEF"){
-            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
-            let valor2=this.expresionDos.interpretar(entorno,tablaDeSimbolos,sb);
+            let valor=this.expresion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
+            let valor2=this.expresionDos.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
             if (this.tipo == "DOUBLE") {
                 for (let i = 0; i < valor; i++) {
                     resultado.push(0.0);
@@ -112,13 +112,13 @@ class Vector2D extends Instruccion{
 
         }else if(this.tipoArr == "LISTA"){
             this.expresion.forEach(instruccion => {
-                instruccion.interpretar(entorno,tablaDeSimbolos,sb);
+                instruccion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
                 arreglo.push(instruccion.valor);
     
             });
 
             this.expresionDos.forEach(instruccion => {
-                instruccion.interpretar(entorno,tablaDeSimbolos,sb);
+                instruccion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
                 arreglo2.push(instruccion.valor);
     
             });

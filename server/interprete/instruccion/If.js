@@ -10,9 +10,12 @@ class If extends Instruccion{
         this.instr_if = instr_if;
     }
 
-    interpretar(entorno,tablaDeSimbolos,sb){
+    interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
+
         let entornoIf = new Entorno(TipoInstr.IF, entorno);
-        this.condicion.interpretar(entornoIf,tablaDeSimbolos,sb);
+        console.log("entornoIf: ", entornoIf);
+        console.log("entornoANTERIOR: ", entorno);
+        this.condicion.interpretar(entornoIf,tablaDeSimbolos,sb,tablaFunciones);
 
         if(this.condicion.tipo != TipoDato.BOOLEAN){
             console.log("Error Semántico: la condicion del if debe ser tipo boolean");
@@ -25,7 +28,7 @@ class If extends Instruccion{
 //arreglar esto
         if(String(this.condicion.valor).toLowerCase() === "true"){
             this.instr_if.forEach(instruccion => {
-                instruccion.interpretar(entornoIf,tablaDeSimbolos,sb);
+                instruccion.interpretar(entornoIf,tablaDeSimbolos,sb,tablaFunciones);
             });
         }
         else{

@@ -10,28 +10,25 @@ class Negativo extends Expresion{
 
     interpretar(entorno,tablaDeSimbolos,sb){
 
-        this.expresion.interpretar(entorno,tablaDeSimbolos);
-
+        let exp = this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
 
 
         if(this.expresion.tipo === "INT"){
             this.tipo = TipoDato.INT;
-            this.valor = -1 * this.expresion.valor;
-            //console.log("tipo: ", this.tipo);
+            this.valor = -1 * exp;
             return Number(this.valor);
         }
-        if(this.expresion.tipo === "DOUBLE"){
+        else if(this.expresion.tipo === "DOUBLE"){
             this.tipo = TipoDato.DOUBLE;
-            this.valor = -1.0 * this.expresion.valor;
-            //console.log("tipo: ", this.tipo);
+            this.valor = -1.0 * exp;
             return parseFloat(this.valor);
-        }
+        }else {
 
         console.log("Error Semántico: Error con el negativo [-] ");
         sb.append("\n");
                 sb.append("Error Semántico: Error con el negativo [-] ");
                 sb.append("\n");
-        return this;
+        return this;}
     }
 
 }

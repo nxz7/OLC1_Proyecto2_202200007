@@ -10,7 +10,7 @@ class Not extends Expresion{
 
     interpretar(entorno,tablaDeSimbolos,sb){
 
-        let valor = this.expresion.interpretar(entorno,tablaDeSimbolos);
+        let valor = this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
         console.log("tipozz: ", this.expresion.tipo);
 
 

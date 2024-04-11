@@ -11,8 +11,8 @@ class Relacionales extends Expresion{
     }
 
     interpretar(entorno,tablaDeSimbolos,sb){
-        let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos);
-        let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos);
+        let valorIzq = this.expIzq.interpretar(entorno,tablaDeSimbolos,sb);
+        let valorDer = this.expDer.interpretar(entorno,tablaDeSimbolos,sb);
 
 
 

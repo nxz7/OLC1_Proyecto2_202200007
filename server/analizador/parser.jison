@@ -6,14 +6,15 @@
 
 
 
-comentario_multi [\/][\*][^\*\/]+[\*][\/];
-comentario_una [\/][\/][^\n]+;
 
 
 
 %%
 // -----> Reglas Lexicas
+[\/][\/][^\n]+ {/* se ignoran */}
+[[\/][\*][^\*\/]+[\*][\/]] {/* se ignoran */}
 "cout"       {return "COUT";}
+"void"       {return "VOID";}
 "endl"       {return "endl";}
 "if"            {return "IF";}
 "[][]"             {return "dosCor";}
@@ -39,7 +40,7 @@ comentario_una [\/][\/][^\n]+;
 "char"            {return "charTipo"; }
 "bool"            {return "boolTipo"; }
 "std::string"            {return "stringTipo"; }
-
+"!"             {return  "exclamacion"; }
 "("             {return "abrirPar"; }
 ")"             {return  "cerrarPar"; }
 "{"             {return "abrirLLAVE"; }
@@ -47,7 +48,6 @@ comentario_una [\/][\/][^\n]+;
 ";"             {return  "puntoycoma"; }
 "<"             {return  "menorQue"; }
 ">"             {return  "mayorQue"; }
-"!"             {return  "exclamacion"; }
 "?"             {return  "interrogracion"; }
 ","             {return  "coma"; }
 "["             {return  "abrirCor"; }
@@ -69,6 +69,7 @@ comentario_una [\/][\/][^\n]+;
 
 
 // -----> Espacios en Blanco
+
 [ \s\r\n\t]             {/* Espacios se ignoran */}
 
 // -----> FIN DE CADENA Y ERRORES
@@ -95,6 +96,7 @@ comentario_una [\/][\/][^\n]+;
     const id_arreglo = require("../interprete/expresion/id_arreglo.js");
     const Potencia = require("../interprete/expresion/Potencia.js");
     const Casteos = require("../interprete/expresion/Casteos.js");
+    const Mod_vector=require("../interprete/expresion/Mod_vector.js");
 
     const Print = require("../interprete/instruccion/Print.js");
     const If = require("../interprete/instruccion/If.js");
@@ -104,13 +106,15 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
    const Vector2D = require("../interprete/instruccion/Vector2D.js");
    const Funcion = require("../interprete/instruccion/Funcion.js");
       const run_funcion = require("../interprete/instruccion/run_funcion.js");
-
+    const Varias_var = require("../interprete/instruccion/Varias_var.js");
+    const Metodo = require("../interprete/instruccion/Metodo.js");
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
     const tablaDeErrores = new tablaError();
     let par =[];
     let arreglo = "";
+    let varias_variables = [];
 
     let tipoArreglo = "";
     let accesoUno = "";
@@ -129,7 +133,7 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
 %left 'dosIgual','menorQue','mayorQue','menorIgual','mayorIgual','diferente'
 %left 'MAS','MENOS'
 %left 'POR','DIVIDIR', 'modulo'
-%left 'abrirPar' 'cerrarPar'
+%left 'abrirPar' 'cerrarPar' 'abrirCor' 'cerrarCor'
 %right UMENOS
 
 // -------> Simbolo Inicial
@@ -139,7 +143,7 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
 %% // ------> Gramatica
 
 inicio
-	: listainstr EOF {$$ = $1; tablaDeErrores.imprimirTablaE(); return $$;  }
+	: listainstr EOF {$$ = $1; tablaDeErrores.imprimirTablaE(); tablaDeErrores.clearTablaError(); return $$;  }
 ;
 
 listainstr 
@@ -148,21 +152,25 @@ listainstr
 ;
 
 instruccion
-    : variable       {$$ = $1;}
+    : variable       {$$ = $1;} //tambien tiene funcion porque inicial con tipo
+    | metodos        {$$ = $1;}
+    | print         { $$ = $1; } 
     | instrif       {$$ = $1;}
-    | exp_InDec      {$$ = $1;}  //tambien tiene lo de llamadas a metodos/func
-	| print         { $$ = $1; }   
+    | exp_InDec     {$$ = $1;}  //tambien tiene lo de llamadas a FUNC/metodos 
 	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
-
+//METODOS CON VOID Y SIN PARAMETROS (tipoF, id, instrucciones,fila, columna)
+metodos         
+    : VOID PALABRA_I abrirPar  cerrarPar abrirLLAVE listainstr  cerrarLLAVE { $$ = new Metodo($1,$2,$6,@1.first_line, @1.first_column);}
+;
 
 print 
-    : COUT menorQue menorQue expresion tipos_print  { $$ = new Print($4,$5); }
+    : COUT menorQue menorQue expresion tipos_print  { $$ = new Print($4,$5, @1.first_line, @1.first_column); }
 ;
 
 tipos_print
-    : menorQue menorQue endl puntoycoma { $$ = "salto"; }
-    |puntoycoma { $$ = null; }
+    : puntoycoma { $$ = null;  }
+    | menorQue menorQue endl puntoycoma { $$ = "salto"; }
 ;
 
 instrif
@@ -173,52 +181,60 @@ instrif
 variable
     : tipos PALABRA_I t_declaracion {  
         if ($3 === "revisar") {
-        if ($1 === "DOUBLE") {
-        dob_default = new Dato(0.0, TipoDato.DOUBLE, @1.first_line, @1.first_column);
-        $$ = new Variable($2, $1, dob_default, @1.first_line, @1.first_column);
-        } else if ($1 === "INT") {
-        int_default = new Dato(0, TipoDato.INT, @1.first_line, @1.first_column);
-        $$ = new Variable($2, $1, int_default, @1.first_line, @1.first_column);
-        } else if ($1 === "CHAR") {
-        char_default = new Dato('0', TipoDato.CHAR, @1.first_line, @1.first_column);    
-        $$ = new Variable($2, $1, char_default, @1.first_line, @1.first_column);
-        } else if ($1 === "BOOL") {
-        bool_default = new Dato("true", TipoDato.BOOLEAN, @1.first_line, @1.first_column);      
-        $$ = new Variable($2, $1, bool_default, @1.first_line, @1.first_column);
-        } else if ($1 === "STD::STRING") {
-        str_default = new Dato(" ", TipoDato.CADENA, @1.first_line, @1.first_column);          
-        $$ = new Variable($2, $1, str_default, @1.first_line, @1.first_column);
-        } else {
-        console.log("error sintactico");
-        }
+            if ($1 === "DOUBLE") {
+            dob_default = new Dato(0.0, TipoDato.DOUBLE, @1.first_line, @1.first_column);
+            $$ = new Variable($2, $1, dob_default, @1.first_line, @1.first_column);
+            } else if ($1 === "INT") {
+            int_default = new Dato(0, TipoDato.INT, @1.first_line, @1.first_column);
+            $$ = new Variable($2, $1, int_default, @1.first_line, @1.first_column);
+            } else if ($1 === "CHAR") {
+            char_default = new Dato('0', TipoDato.CHAR, @1.first_line, @1.first_column);    
+            $$ = new Variable($2, $1, char_default, @1.first_line, @1.first_column);
+            } else if ($1 === "BOOL") {
+            bool_default = new Dato("true", TipoDato.BOOLEAN, @1.first_line, @1.first_column);      
+            $$ = new Variable($2, $1, bool_default, @1.first_line, @1.first_column);
+            } else if ($1 === "STD::STRING") {
+            str_default = new Dato(" ", TipoDato.CADENA, @1.first_line, @1.first_column);          
+            $$ = new Variable($2, $1, str_default, @1.first_line, @1.first_column);
+            } else {
+            console.log("error sintactico");
+            }
         } 
-        else if (arreglo=="1D1"){
+        else if (arreglo=="1D1" && $3!= "revisar"){
             $$ = new Vector($2,$1,$1,"LISTA",$3,@1.first_line, @1.first_column);
-            arreglo=="";
+            arreglo="";
         } 
-        else if (arreglo=="1D2"){
+        else if (arreglo=="1D2" && $3!="revisar"){
             $$ = new Vector($2,$1,tipoArreglo,"DEF",$3,@1.first_line, @1.first_column);
-            arreglo=="";
+            arreglo="";
             tipoArreglo="";
         } 
-        else if (arreglo=="matriz1"){
+        else if (arreglo=="matriz1" && $3!="revisar"){
            $$ = new Vector2D($2,$1,tipoArreglo,"DEF",$3,datoDos,@1.first_line, @1.first_column);
-           arreglo=="";
+           arreglo="";
             tipoArreglo="";
            datoDos=null;
         }
-        else if (arreglo=="matriz2"){
+        else if (arreglo=="matriz2" && $3!="revisar"){
             $$ = new Vector2D($2,$1,$1,"LISTA",$3,mat2,@1.first_line, @1.first_column);
-            arreglo=="";
+            arreglo="";
             tipoArreglo="";
             mat2=null;
-        } else if (arreglo=="FUNCION") {
+        } else if (arreglo=="FUNCION" && $3!="revisar") {
             $$ = new Funcion ($1,$2,par,$3,@1.first_line, @1.first_column);
             arreglo="";
             par ="";
+        }else if (arreglo=="listaDeVar" && $3!="revisar") {
+            varias_variables.push($2)
+            $$ = new Varias_var(varias_variables, $1, $3, @1.first_line, @1.first_column);
+            arreglo="";
+            varias_variables=[];
         }
+
         else { 
+            if (arreglo == null){
         $$ = new Variable($2, $1, $3, @1.first_line, @1.first_column);
+        arreglo="";}
         }
 
         }
@@ -226,12 +242,18 @@ variable
 
 
 t_declaracion
-    :IGUAL expresion puntoycoma { $$ = $2; }
+    :IGUAL expresion puntoycoma { $$ = $2; arreglo=null;}
+    |coma lista_var IGUAL expresion puntoycoma {arreglo="listaDeVar"; varias_variables=$2; $$ = $4; }
     |puntoycoma { $$ = "revisar"; }
     |abrirCor cerrarCor IGUAL arreglo { $$ = $4; }
     |dosCor IGUAL doble_arreglo { $$ = $3; }
     |abrirPar lista_int cerrarPar abrirLLAVE listainstr  cerrarLLAVE {par = $2 ; arreglo="FUNCION"; $$ =$5;}
     ;
+
+lista_var
+    :lista_var coma PALABRA_I {$$ = $1; $$.push($3);}
+    | PALABRA_I {$$ = []; $$.push($1);}
+;
 
 lista_int
     : lista_int coma tipos PALABRA_I {$$ = $1; $$.push($3); $$.push($4);}
@@ -298,10 +320,15 @@ expresion
         if(totalDos!=null){
             $$= new id_arreglo($1,$2,totalDos, @1.first_line, @1.first_column);
             totalDos=null;
+            arreglo ="";
+            accesoDos=null;
         }
         else if(accesoUno=="unaDim" && totalDos==null){
             $$= new id_arreglo($1,$2,null, @1.first_line, @1.first_column);
             accesoUno="";
+            totalDos=null;
+            arreglo ="";
+            accesoDos=null;
         }
         else{
         $$ = new id($1, @1.first_line, @1.first_column);
@@ -318,7 +345,6 @@ parentesis_exp
 palabras
     :abrirCor DATOS cerrarCor amb_palabras {
         if (accesoDos =="dosDim"){
-            //totalDos=$4;
             $$=$2;
         }else{
             accesoUno="unaDim";
@@ -330,14 +356,25 @@ palabras
 ;
 
 amb_palabras
-    : abrirCor DATOS cerrarCor {accesoDos="dosDim";totalDos=$2;$$=$2;}
-    | {$$=null;}
+    : abrirCor DATOS cerrarCor {accesoDos="dosDim"; totalDos=$2; $$=$2;}
+    | {accesoDos=null; $$=null;}
 ;
 
 exp_InDec
     : PALABRA_I MASmas  puntoycoma  {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
     | PALABRA_I MENOSmenos puntoycoma {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
-    | PALABRA_I abrirPar lista_par cerrarPar puntoycoma {$$= new run_funcion($1,$3, @1.first_line, @1.first_column);}
+    | PALABRA_I abrirPar llamarMoF {$$= new run_funcion($1,$3, @1.first_line, @1.first_column);}
+    | PALABRA_I abrirCor expresion cerrarCor vect_2d IGUAL expresion puntoycoma {$$= new Mod_vector($1,$3,$5,$7, @1.first_line, @1.first_column);}
+;
+
+llamarMoF
+    :cerrarPar puntoycoma {$$=null}
+    |lista_par cerrarPar puntoycoma {$$=$1;}
+;
+
+vect_2d
+    :abrirCor expresion cerrarCor {$$=$2;}
+    |{$$=null;}
 ;
 
 lista_par

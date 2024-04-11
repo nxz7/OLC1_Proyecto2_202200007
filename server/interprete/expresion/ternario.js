@@ -11,9 +11,9 @@ class Ternario extends Expresion{
     }
 
     interpretar(entorno,tablaDeSimbolos,sb){
-        let expTrue = this.expTrue.interpretar(entorno,tablaDeSimbolos);
-        let expFalse = this.expFalse.interpretar(entorno,tablaDeSimbolos);
-        let condicion = this.condicion.interpretar(entorno,tablaDeSimbolos);
+        let expTrue = this.expTrue.interpretar(entorno,tablaDeSimbolos,sb);
+        let expFalse = this.expFalse.interpretar(entorno,tablaDeSimbolos,sb);
+        let condicion = this.condicion.interpretar(entorno,tablaDeSimbolos,sb);
 
 
         if(condicion == true){

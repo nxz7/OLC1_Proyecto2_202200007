@@ -21,7 +21,7 @@ router.post('/Ejecutar', (req, res) => {
     let entornoGlobal = new Entorno("GLOBAL", null);
     let tablaDeSimbolos = new tablaSimbolos();
     let tablaFunciones = new tabladeFunciones();
-
+    console.log("resultado", resultado);
     res.send('Texto recibido correctamente');
     try {
         resultado.forEach(instruccion => {
