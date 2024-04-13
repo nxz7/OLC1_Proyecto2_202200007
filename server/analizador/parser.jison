@@ -18,6 +18,7 @@
 "void"       {return "VOID";}
 "endl"       {return "endl";}
 "if"            {return "IF";}
+"else"            {return "ELSE";}
 "<<"             {return  "CorImp"; }
 "[][]"             {return "dosCor";}
 "++"             {return "MASmas";}
@@ -125,6 +126,13 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     let totalDos = null;
     let datoDos = null;
     let mat2=null;
+
+    //if
+    let Ielse_if =[];
+    let Ielse=[];
+    let cond_ifElse=null;
+    let cond_else=null;
+
 %}
 
 
@@ -182,10 +190,26 @@ tipos_print
     | CorImp endl puntoycoma { $$ = "salto"; }
 ;
 
-instrif
-	: IF abrirPar expresion cerrarPar abrirLLAVE listainstr  cerrarLLAVE    	{$$ = new If($3, $6, @1.first_line, @1.first_column);}
+instrif                                                                                     
+	: IF abrirPar expresion cerrarPar abrirLLAVE listainstr  cerrarLLAVE siguiente_if   	{$$ = new If($3, $6, Ielse_if,cond_ifElse,Ielse,cond_else ,@1.first_line, @1.first_column);  cond_else=null;cond_ifElse=null;Ielse=[];Ielse_if =[]; }
 ;
 
+siguiente_if
+: ELSE prod_if_esle {$$=$2;}
+| { $$ = null;  Ielse_if=null; Ielse=null;  cond_ifElse=null; cond_else=null}
+;
+
+
+
+prod_if_esle
+: IF abrirPar expresion cerrarPar abrirLLAVE listainstr  cerrarLLAVE ultimo_else {cond_ifElse=$3; Ielse_if=$6; $$=$6;}
+| abrirLLAVE listainstr  cerrarLLAVE {Ielse=$2; cond_else="else"; cond_ifElse=null; Ielse_if=null; $$ = $2; }
+;
+
+ultimo_else
+:  ELSE abrirLLAVE listainstr  cerrarLLAVE {Ielse=$3; cond_else="else"; $$ = $3; }
+| { Ielse=null; cond_else=null; $$ = null;  }
+;
 
 variable
     : tipos PALABRA_I t_declaracion {  

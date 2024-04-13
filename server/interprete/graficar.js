@@ -11,6 +11,7 @@ function graficarArbol(arbolitos) {
     cuerpo = '';
     graphAST('n0', arbolitos);
     let principal = `digraph arbolAST{ 
+        rankdir=TB;
     node [color="lightgreen", style="filled"];
       n0[label="${arbolitos.valor.replace('"', '\\"')}"];
       ${cuerpo}

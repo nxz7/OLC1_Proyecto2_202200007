@@ -5,10 +5,14 @@ const StringBuilder = require('../StringBuilder.js');
 const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class If extends Instruccion{
-    constructor(condicion, instr_if, fila, columna){
+    constructor(condicion, instr_if, else_if,cond_elseIf,instr_else,cond_else, fila, columna){
         super(TipoInstr.IF, fila, columna);
         this.condicion = condicion;
         this.instr_if = instr_if;
+        this.else_if = else_if;
+        this.cond_elseIf=cond_elseIf;
+        this.instr_else=instr_else;
+        this.cond_else=cond_else;
     }
 
     getNodo() {
@@ -24,6 +28,31 @@ class If extends Instruccion{
         });
 
         nodo.agregarHijo('}');
+
+        if (this.cond_elseIf!=null){
+            nodo.agregarHijo('ELSE IF');
+            nodo.agregarHijo('(');
+            nodo.agregarHijoAST(this.cond_elseIf.getNodo());
+            nodo.agregarHijo(')');
+            nodo.agregarHijo('{');
+            
+            this.else_if.forEach(instruccion => {
+                nodo.agregarHijoAST(instruccion.getNodo());
+            });
+            nodo.agregarHijo('}');
+        }
+
+        if (this.cond_else!=null){
+            nodo.agregarHijo('ELSE');
+            nodo.agregarHijo('{');
+            
+            this.instr_else.forEach(instruccion => {
+                nodo.agregarHijoAST(instruccion.getNodo());
+            });
+            nodo.agregarHijo('}');
+        }
+
+
         return nodo;
     }
 
@@ -49,8 +78,22 @@ class If extends Instruccion{
                 instruccion.interpretar(entornoIf,tablaDeSimbolos,sb,tablaFunciones);
             });
         }
-        else{
-            // Ejecución del else If o else
+        else if (this.else_if!=null && String(this.cond_elseIf.valor).toLowerCase() === "true"){
+            let entornoIf_Else = new Entorno(TipoInstr.IF_ELSE, entorno);
+            console.log(entornoIf_Else.anterior.nombre);
+
+            this.else_if.forEach(instruccion => {
+                instruccion.interpretar(entornoIf_Else,tablaDeSimbolos,sb,tablaFunciones);
+            });
+
+        }else if (this.cond_else!=null){
+            let entorno_Else = new Entorno(TipoInstr.ELSE, entorno);
+            console.log(entorno_Else.anterior.nombre);
+
+            this.instr_else.forEach(instruccion => {
+                instruccion.interpretar(entorno_Else,tablaDeSimbolos,sb,tablaFunciones);
+            });
+
         }
         // Guardar entorno
         return this;

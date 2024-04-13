@@ -16,7 +16,9 @@ const TipoInstr = {
     ARREGLO: 'Arreglo',
     FUNCION: 'FUNCION',
     METODO: 'METODOS',
-    EXECUTE: 'EXECUTE'
+    EXECUTE: 'EXECUTE',
+    IF_ELSE: 'IF_ELSE',
+    ELSE: 'ELSE'
 }
 
 module.exports = {Instruccion, TipoInstr}
