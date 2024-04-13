@@ -1,7 +1,7 @@
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 const StringBuilder = require('../StringBuilder.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 const simb = require('../Simbolos/simb.js');
 
 class Vector extends Instruccion{
@@ -12,6 +12,36 @@ class Vector extends Instruccion{
         this.tipo = tipo;
         this.tipo2 = tipo2;
         this.tipoArr = tipoArr;
+    }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('DECLARACION[VECT -1D]');
+        let tipoD = ";";
+        nodo.agregarHijo(this.tipo);
+        nodo.agregarHijo(this.id);
+            nodo.agregarHijo('[]');
+            nodo.agregarHijo('=');
+        if (this.tipoArr == "DEF"){
+            nodo.agregarHijo('new');
+            nodo.agregarHijo(this.tipo2);
+            nodo.agregarHijo("[");
+            nodo.agregarHijoAST(this.expresion.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(";");
+
+        }else if(this.tipoArr == "LISTA"){
+            nodo.agregarHijo("[");
+            this.expresion.forEach(instruccion => {
+                
+                nodo.agregarHijoAST(instruccion.getNodo());
+            });
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(";");
+
+        }
+        return nodo;
+
+        
     }
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){

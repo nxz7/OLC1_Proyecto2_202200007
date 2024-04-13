@@ -3,7 +3,7 @@ const { Instruccion, TipoInstr } = require("../Instruccion");
 const Entorno = require("../entorno/Entorno");
 const StringBuilder = require('../StringBuilder.js');
 const simb = require('../Simbolos/simb.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class run_funcion extends Instruccion{
     constructor(id, valores, fila, columna){
@@ -11,6 +11,21 @@ class run_funcion extends Instruccion{
         this.id = id;
         this.valores = valores;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('run m/f');
+        nodo.agregarHijo(this.id);
+        nodo.agregarHijo('(');
+        if (this.valores != null){
+            this.valores.forEach(valorz => {
+                nodo.agregarHijoAST(valorz.getNodo());
+            });
+        }
+        nodo.agregarHijo(')');
+        nodo.agregarHijo(';');
+        return nodo;
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
         //let funcionNombre = this.id;

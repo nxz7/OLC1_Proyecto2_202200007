@@ -1,7 +1,7 @@
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 const StringBuilder = require('../StringBuilder.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 const simb = require('../Simbolos/simb.js');
 
 class Variable extends Instruccion{
@@ -10,6 +10,46 @@ class Variable extends Instruccion{
         this.expresion = expresion;
         this.id = id;
         this.tipo = tipo;
+    }
+    
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('DECLARACION[VAR]');
+        let tipoD = ";";
+        if (this.tipo == "INT") {
+            nodo.agregarHijo('INT');
+            tipoD = "INT";
+        }
+        else if (this.tipo == "STD::STRING") {
+            nodo.agregarHijo('STD::STRING');
+            tipoD = "STD::STRING";
+        }
+        else if (this.tipo == "DOUBLE") {
+            nodo.agregarHijo("DOUBLE");
+            tipoD = "DOUBLE";
+        }
+        else if (this.tipo == "CHAR") {
+            nodo.agregarHijo('CHAR');
+            tipoD = "CHAR";
+        }
+        else if (this.tipo == "BOOL") {
+            nodo.agregarHijo('BOOL');
+            tipoD = "BOOL";
+        }
+        let arreg =this.id;
+        let element = arreg[0];
+        nodo.agregarHijo(element);
+        for (let i = 1; i < arreg.length; i++) {
+            let element = arreg[i];
+            nodo.agregarHijo(",");
+            nodo.agregarHijo(element);
+            
+        }
+        nodo.agregarHijo('=');
+        if (this.expresion != null) {
+            nodo.agregarHijoAST(this.expresion.getNodo());
+        }
+        nodo.agregarHijo(';');
+        return nodo;
     }
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){

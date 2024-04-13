@@ -2,6 +2,7 @@ const { TipoDato } = require("../Expresion");
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const Entorno = require("../entorno/Entorno");
 const StringBuilder = require('../StringBuilder.js');
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class If extends Instruccion{
     constructor(condicion, instr_if, fila, columna){
@@ -9,6 +10,23 @@ class If extends Instruccion{
         this.condicion = condicion;
         this.instr_if = instr_if;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('IF');
+        nodo.agregarHijo('IF');
+        nodo.agregarHijo('(');
+        nodo.agregarHijoAST(this.condicion.getNodo());
+        nodo.agregarHijo(')');
+        nodo.agregarHijo('{');
+        
+        this.instr_if.forEach(instruccion => {
+            nodo.agregarHijoAST(instruccion.getNodo());
+        });
+
+        nodo.agregarHijo('}');
+        return nodo;
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
 

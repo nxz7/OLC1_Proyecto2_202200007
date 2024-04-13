@@ -4,7 +4,7 @@ const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 const Dato = require("./Dato.js");
 const simb = require('../Simbolos/simb.js');
 const StringBuilder = require('../StringBuilder.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class Mod_vector extends Expresion{
     constructor(id,index1,index2,expresion,  fila, columna){
@@ -14,6 +14,29 @@ class Mod_vector extends Expresion{
         this.index2 = index2;
         this.expresion = expresion;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('MODIFICAR_VECT');
+        nodo.agregarHijo(this.id);
+        if (this.index2 == null && this.index1 != null){
+            nodo.agregarHijo('[');
+            nodo.agregarHijoAST(this.index1.getNodo());
+            nodo.agregarHijo('[');
+        }else if(this.index2 != null && this.index1 != null){
+            nodo.agregarHijo('[');
+            nodo.agregarHijoAST(this.index1.getNodo());
+            nodo.agregarHijo(']');
+            nodo.agregarHijo('[');
+            nodo.agregarHijoAST(this.index2.getNodo());
+            nodo.agregarHijo(']');
+        }
+        nodo.agregarHijo("=");
+        nodo.agregarHijoAST(this.expresion.getNodo());
+        nodo.agregarHijo(";");
+        return nodo;
+    }
+
+
 
     interpretar(entorno,tablaDeSimbolos,sb){
         try {

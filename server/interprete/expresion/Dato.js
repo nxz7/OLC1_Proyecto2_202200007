@@ -1,14 +1,20 @@
 const {Expresion} = require("../Expresion.js")
 const StringBuilder = require('../StringBuilder.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class Dato extends Expresion{
     constructor(valor, tipo,linea, columna){
         super(valor, tipo,linea, columna);
         //this.tipo = tipo;
-        //this.valor = valor;
+        this.valor = valor;
         //this.linea = linea;
         //this.columna = columna;
+    }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('DATO');
+        nodo.agregarHijo(this.valor);
+        return nodo;
     }
 
     interpretar(entorno,tablaDeSimbolos,sb){

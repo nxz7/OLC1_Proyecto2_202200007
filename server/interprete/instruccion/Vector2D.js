@@ -2,6 +2,7 @@ const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 const StringBuilder = require('../StringBuilder.js');
 const simb = require('../Simbolos/simb.js');
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class Vector2D extends Instruccion{
     constructor(id, tipo,tipo2,tipoArr, expresion, expresionDos, fila, columna){
@@ -13,6 +14,48 @@ class Vector2D extends Instruccion{
         this.tipo2 = tipo2;
         this.tipoArr = tipoArr;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('DECLARACION[VECT -2D]');
+        let tipoD = ";";
+        nodo.agregarHijo(this.tipo);
+        nodo.agregarHijo(this.id);
+            nodo.agregarHijo('[][]');
+            nodo.agregarHijo('=');
+        if (this.tipoArr == "DEF"){
+            nodo.agregarHijo('new');
+            nodo.agregarHijo(this.tipo2);
+            nodo.agregarHijo("[");
+            nodo.agregarHijoAST(this.expresion.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo("[");
+            nodo.agregarHijoAST(this.expresionDos.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(";");
+
+        }else if(this.tipoArr == "LISTA"){
+            nodo.agregarHijo("[");
+            nodo.agregarHijo("[");
+            this.expresion.forEach(instruccion => {
+                
+                nodo.agregarHijoAST(instruccion.getNodo());
+            });
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(",");
+            nodo.agregarHijo("[");
+            this.expresionDos.forEach(instruccion => {
+                nodo.agregarHijoAST(instruccion.getNodo());
+            });
+            nodo.agregarHijo("]");
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(";");
+
+        }
+        return nodo;
+
+        
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
         let arreglo = [];

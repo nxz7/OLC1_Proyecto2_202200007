@@ -83,7 +83,7 @@
     <div class="flex-container">
         <form method="POST" id="myForm" enctype="multipart/form-data">
             <input type="file" id="fileInput" name="file" accept=".sc" />
-            <button type="submit">Cargar archivo</button>
+            <button type="button" id="cargarArchivoButton">Cargar archivo</button>
         </form>
 
         <button onclick="mostrarTexto()"> EJECUTAR </button>
@@ -105,6 +105,19 @@
         </div>
     </div>
     <script>
+        document.getElementById('cargarArchivoButton').addEventListener('click', cargarArchivo);
+
+function cargarArchivo() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('entrada').value = e.target.result;
+    };
+    reader.readAsText(file);
+}
+
+
         function mostrarTexto() {
             var texto = document.getElementById('entrada').value;
             //console.log(texto);

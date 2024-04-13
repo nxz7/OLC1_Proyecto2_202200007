@@ -1,6 +1,6 @@
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 const simb = require('../Simbolos/simb.js');
 const StringBuilder = require('../StringBuilder.js');
 
@@ -10,6 +10,13 @@ class inst_IncDec extends Instruccion{
         this.id = id;
         this.operador = operador;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('inc/dec');
+        nodo.agregarHijo(this.id);
+        return nodo;
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
 

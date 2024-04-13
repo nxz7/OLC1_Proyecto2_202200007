@@ -1,5 +1,6 @@
 const { Expresion, TipoDato } = require("../Expresion");
 const StringBuilder = require('../StringBuilder.js');
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class Logico extends Expresion{
     
@@ -9,6 +10,20 @@ class Logico extends Expresion{
         this.expDer = expDer;
         this.operador = operador;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('EXPRESION - LOGICA');
+        nodo.agregarHijoAST(this.expIzq.getNodo());
+        if (this.operador == "&&") {
+            nodo.agregarHijo("&&");
+        }
+        else if (this.operador == "||") {
+            nodo.agregarHijo("||");
+        }
+        nodo.agregarHijoAST(this.expDer.getNodo());
+        return nodo;
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb){
         let expDer = this.expDer.interpretar(entorno,tablaDeSimbolos,sb);

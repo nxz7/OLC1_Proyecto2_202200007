@@ -6,9 +6,10 @@ const Entorno = require("../../interprete/entorno/Entorno.js");
 const tablaSimbolos = require('../../interprete/Simbolos/tablaSimbolos.js');
 const StringBuilder = require('../../interprete/StringBuilder.js');
 const tabladeFunciones = require('../../interprete/TablaMF/tablafuncion.js');
-
+const {graficarArbol} = require('../../interprete/graficar.js')
+const  {NodoAst} = require('../../interprete/Simbolos/NodoAst.js')
 let sb = new StringBuilder();
-
+const dot=""
 
 router.get('/', (req, res) => {
     res.send('Server working')
@@ -43,7 +44,23 @@ router.post('/Ejecutar', (req, res) => {
     } catch (error) {
         console.error("ERROR SEMANTICO EN:", error);
     }
-    
+
+    try {
+
+        let init = new NodoAst('INICIO')
+        let instrucciones = new NodoAst('LISTA_INSTRUCCIONES')
+
+        resultado.forEach(instruccion => {
+            instrucciones.agregarHijoAST(instruccion.getNodo())
+        });
+
+        init.agregarHijoAST(instrucciones)
+        respuesta = {"result":graficarArbol(init)};
+
+    } catch (error) {
+        console.log(error)
+    }
+
     tablaDeSimbolos.reporteTabla();
     tablaFunciones.reporteTabla();
 });

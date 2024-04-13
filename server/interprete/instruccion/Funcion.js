@@ -2,7 +2,7 @@ const { TipoDato } = require("../Expresion");
 const { Instruccion, TipoInstr } = require("../Instruccion");
 const Entorno = require("../entorno/Entorno");
 const StringBuilder = require('../StringBuilder.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 const func = require('../TablaMF/func.js');
 const simb = require('../Simbolos/simb.js');
 
@@ -15,6 +15,29 @@ class Funcion extends Instruccion{
         this.instrucciones = instrucciones;
         
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('FUNCION');
+        nodo.agregarHijo(this.tipoF);
+        nodo.agregarHijo(this.id);
+        nodo.agregarHijo('(');
+        
+        if (this.parametros != null){
+            nodo.agregarHijo(this.parametros);
+        }
+        nodo.agregarHijo(')');
+
+        nodo.agregarHijo('{');
+        
+        this.instrucciones.forEach(instruccion => {
+            nodo.agregarHijoAST(instruccion.getNodo());
+        });
+
+        nodo.agregarHijo('}');
+
+        return nodo;
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
 

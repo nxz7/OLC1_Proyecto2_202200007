@@ -137,6 +137,7 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
 %left 'MAS','MENOS'
 %left 'POR','DIVIDIR', 'modulo'
 %left 'abrirPar' 'cerrarPar' 'abrirCor' 'cerrarCor'
+
 %right UMENOS
 
 // -------> Simbolo Inicial

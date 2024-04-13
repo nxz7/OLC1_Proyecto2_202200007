@@ -1,5 +1,6 @@
 const { Expresion, TipoDato } = require("../Expresion");
 const StringBuilder = require('../StringBuilder.js');
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class IncDec extends Expresion{
     
@@ -9,6 +10,14 @@ class IncDec extends Expresion{
         this.operador = operador;
     }
 
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('INC-DEC (expr)');
+        nodo.agregarHijoAST(this.expresion.getNodo());
+        nodo.agregarHijo(this.operador);
+        return nodo;
+    }
+    
     interpretar(entorno,tablaDeSimbolos,sb){
         let expresion = this.expresion.interpretar(entorno,tablaDeSimbolos,sb);
 

@@ -4,7 +4,7 @@ const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 const Dato = require("./Dato.js");
 const simb = require('../Simbolos/simb.js');
 const StringBuilder = require('../StringBuilder.js');
-
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class id_arreglo extends Expresion{
     constructor(id,index1,index2,  fila, columna){
@@ -13,6 +13,26 @@ class id_arreglo extends Expresion{
         this.index1 = index1;
         this.index2 = index2;
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('ID_arreglo');
+        nodo.agregarHijo(this.id);
+        if (this.index2 == null && this.index1 != null){
+            nodo.agregarHijo('[');
+            nodo.agregarHijoAST(this.index1.getNodo());
+            nodo.agregarHijo('[');
+        }else if(this.index2 != null && this.index1 != null){
+            nodo.agregarHijo('[');
+            nodo.agregarHijoAST(this.index1.getNodo());
+            nodo.agregarHijo(']');
+            nodo.agregarHijo('[');
+            nodo.agregarHijoAST(this.index2.getNodo());
+            nodo.agregarHijo(']');
+        }
+        nodo.agregarHijo(";");
+        return nodo;
+    }
+
 
     interpretar(entorno,tablaDeSimbolos,sb){
         //console.log(this.index1);

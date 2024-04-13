@@ -1,5 +1,6 @@
 const { Expresion, TipoDato } = require("../Expresion");
 const StringBuilder = require('../StringBuilder.js');
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class Aritmetica extends Expresion{
     constructor(expIzq, operador, expDer, fila, columna){
@@ -9,6 +10,30 @@ class Aritmetica extends Expresion{
         this.expDer = expDer;
 
     }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('EXPRESION - ARITMETICA');
+        nodo.agregarHijoAST(this.expIzq.getNodo());
+        if (this.operador == "+") {
+            nodo.agregarHijo('+');
+        }
+        else if (this.operador == "-") {
+            nodo.agregarHijo('-');
+        }
+        else if (this.operador == "/") {
+            nodo.agregarHijo('/');
+        }
+        else if (this.operador == "*") {
+            nodo.agregarHijo('*');
+        }
+        else if (this.operador == "%") {
+            nodo.agregarHijo('%');
+        }
+        nodo.agregarHijoAST(this.expDer.getNodo());
+        return nodo;
+    }
+
+
 
     interpretar(entorno,tablaDeSimbolos,sb){
 

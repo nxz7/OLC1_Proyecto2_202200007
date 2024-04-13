@@ -4,11 +4,18 @@ const { TipoSimbolo, Simbolo } = require("../entorno/Simbolo");
 const Dato = require("./Dato.js");
 const simb = require('../Simbolos/simb.js');
 const StringBuilder = require('../StringBuilder.js');
+const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class id extends Expresion{
     constructor(id,  fila, columna){
         super("ERROR", TipoDato.ERROR, fila, columna);
         this.id = id;
+    }
+
+    getNodo() {
+        let nodo = new NodoAst_1.NodoAst('ID');
+        nodo.agregarHijo(this.id);
+        return nodo;
     }
 
     interpretar(entorno,tablaDeSimbolos,sb){
