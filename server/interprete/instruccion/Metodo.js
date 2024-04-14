@@ -7,10 +7,11 @@ const func = require('../TablaMF/func.js');
 const simb = require('../Simbolos/simb.js');
 
 class Metodo extends Instruccion{
-    constructor(tipoF, id, instrucciones,fila, columna){
+    constructor(tipoF, id, parametros,instrucciones,fila, columna){
         super(TipoInstr.METODO, fila, columna);
         this.tipoF = tipoF;
         this.id = id;
+        this.parametros = parametros;
         this.instrucciones = instrucciones;
         
     }
@@ -20,6 +21,9 @@ class Metodo extends Instruccion{
         nodo.agregarHijo('VOID');
         nodo.agregarHijo(this.id);
         nodo.agregarHijo('(');
+        if (this.parametros != null){
+            nodo.agregarHijo(this.parametros);
+        }
         nodo.agregarHijo(')');
         nodo.agregarHijo('{');
         this.instrucciones.forEach(instruccion => {
@@ -33,7 +37,7 @@ class Metodo extends Instruccion{
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
 
         try {
-            let metodo = new func(this.tipoF, this.id, null, this.instrucciones,"METODO",this.fila, this.columna);
+            let metodo = new func(this.tipoF, this.id, this.parametros, this.instrucciones,"METODO",this.fila, this.columna);
             //console.log(funcion);
             tablaFunciones.agregarFuncion(metodo);
             

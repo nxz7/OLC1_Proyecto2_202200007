@@ -74,10 +74,17 @@ class tablaSimbolos {
             }
             
                 console.log("ENTORNO ANTERIOR: ", entorno.anterior.nombre);
+                console.log("ENTORNO ANTERIOR anterior: ", entorno.anterior.anterior.nombre);
                 for (let i = 0; i < this.tablaSimbolos.length; i++) {
                     if (this.tablaSimbolos[i].id.toLowerCase() == nombre.toLowerCase() && this.tablaSimbolos[i].entorno == entorno.anterior.nombre) {
                         return this.tablaSimbolos[i];
-                    }
+                    } 
+                }
+
+                for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                    if (this.tablaSimbolos[i].id.toLowerCase() == nombre.toLowerCase() && this.tablaSimbolos[i].entorno == entorno.anterior.anterior.nombre) {
+                        return this.tablaSimbolos[i];
+                    } 
                 }
 
             // si no global

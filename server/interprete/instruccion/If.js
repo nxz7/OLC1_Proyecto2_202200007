@@ -72,6 +72,7 @@ class If extends Instruccion{
             sb.append("\n");
             return this;
         }
+        try{
 //arreglar esto
         if(String(this.condicion.valor).toLowerCase() === "true"){
             this.instr_if.forEach(instruccion => {
@@ -95,6 +96,13 @@ class If extends Instruccion{
             });
 
         }
+
+    } catch (error) {
+        console.log("ERROR SEMANTICO");
+        sb.append("\n");
+        sb.append("ERROR SEMANTICO >>> IF ");
+        sb.append("\n");
+    }
         // Guardar entorno
         return this;
     }

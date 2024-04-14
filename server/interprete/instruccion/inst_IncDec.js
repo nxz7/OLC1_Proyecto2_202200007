@@ -14,6 +14,7 @@ class inst_IncDec extends Instruccion{
     getNodo() {
         let nodo = new NodoAst_1.NodoAst('inc/dec');
         nodo.agregarHijo(this.id);
+        nodo.agregarHijo(this.operador);
         return nodo;
     }
 
@@ -22,7 +23,7 @@ class inst_IncDec extends Instruccion{
 
         let encontrada = tablaDeSimbolos.getSimbolo(this.id,entorno);
         let index = tablaDeSimbolos.getSimboloIndex(this.id,entorno);
-
+try {
         if (encontrada!= null){
             if(this.operador == "++"){
                 if(encontrada.tipo == "INT"){
@@ -84,6 +85,14 @@ class inst_IncDec extends Instruccion{
                 sb.append("\n");
             return this;
         }
+
+    } catch (error) {
+        console.log("ERROR SEMANTICO");
+        sb.append("\n");
+        sb.append("ERROR SEMANTICO >>> inc/dec ");
+        sb.append("\n");
+    }
+
     }
 }
 

@@ -13,8 +13,14 @@
 // -----> Reglas Lexicas
 [\/][\/][^\n]+ {/* se ignoran */}
 [[\/][\*][^\*\/]+[\*][\/]] {/* se ignoran */}
+"for"       {return "FORFOR";}
+";"             {return  "puntoycoma"; }
 "cout"       {return "COUT";}
 "execute"       {return "EXECUTE";}
+
+"do"       {return "DO";}
+
+"while"       {return "WHILE";}
 "void"       {return "VOID";}
 "endl"       {return "endl";}
 "if"            {return "IF";}
@@ -48,7 +54,7 @@
 ")"             {return  "cerrarPar"; }
 "{"             {return "abrirLLAVE"; }
 "}"             {return "cerrarLLAVE"; }
-";"             {return  "puntoycoma"; }
+
 "<"             {return  "menorQue"; }
 ">"             {return  "mayorQue"; }
 "?"             {return  "interrogracion"; }
@@ -112,6 +118,9 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     const Varias_var = require("../interprete/instruccion/Varias_var.js");
     const Metodo = require("../interprete/instruccion/Metodo.js");
     const execute = require("../interprete/instruccion/execute.js");
+    const While = require("../interprete/instruccion/While.js");
+    const do_while = require("../interprete/instruccion/do_while.js");
+    const For = require("../interprete/instruccion/For.js");
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
@@ -168,13 +177,43 @@ instruccion
     | metodos        {$$ = $1;}
     | print         { $$ = $1; } 
     | instrif       {$$ = $1;}
+    | intrWhile     {$$ = $1;}
+    | yey_for     {$$ = $1;}
+    | inst_DoWhile  {$$ = $1;}
     | exp_InDec     {$$ = $1;}  //tambien tiene lo de llamadas a FUNC/metodos 
     | run_exe       {$$ = $1;}
 	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
+
+yey_for
+:FORFOR abrirPar ml_for expresion puntoycoma ml_actualizacion cerrarPar abrirLLAVE listainstr  cerrarLLAVE {$$= new For($3,$4,$6, $9, this._$.first_line  , this._$.first_column);}
+;
+
+ml_for
+: variable {$$=$1;}
+| expresion puntoycoma {$$=$1;}
+;
+
+ml_actualizacion
+    : PALABRA_I MASmas    {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
+    | PALABRA_I MENOSmenos {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
+;
+
+
+
+inst_DoWhile
+: DO abrirLLAVE listainstr  cerrarLLAVE WHILE abrirPar expresion cerrarPar puntoycoma {$$= new do_while($7,$3,@1.first_line, @1.first_column);}
+;
+
+
+intrWhile
+    :WHILE abrirPar expresion cerrarPar abrirLLAVE listainstr  cerrarLLAVE {$$= new While($3,$6,@1.first_line, @1.first_column);}
+;
+
+
 //METODOS CON VOID Y SIN PARAMETROS (tipoF, id, instrucciones,fila, columna)
 metodos         
-    : VOID PALABRA_I abrirPar  cerrarPar abrirLLAVE listainstr  cerrarLLAVE { $$ = new Metodo($1,$2,$6,@1.first_line, @1.first_column);}
+    : VOID PALABRA_I abrirPar  lista_int cerrarPar abrirLLAVE listainstr  cerrarLLAVE { $$ = new Metodo($1,$2,$4,$7,@1.first_line, @1.first_column);}
 ;
 
 run_exe 
@@ -291,6 +330,7 @@ lista_var
 lista_int
     : lista_int coma tipos PALABRA_I {$$ = $1; $$.push($3); $$.push($4);}
     | tipos PALABRA_I {$$ = []; $$.push($1); $$.push($2);}
+    | {$$=null;}
 ;
 
 

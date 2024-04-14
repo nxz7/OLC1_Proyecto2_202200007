@@ -18,7 +18,10 @@ const TipoInstr = {
     METODO: 'METODOS',
     EXECUTE: 'EXECUTE',
     IF_ELSE: 'IF_ELSE',
-    ELSE: 'ELSE'
+    ELSE: 'ELSE',
+    WHILE: 'WHILE',
+    DOWHILE: 'DOWHILE',
+    FOR: 'FOR'
 }
 
 module.exports = {Instruccion, TipoInstr}
