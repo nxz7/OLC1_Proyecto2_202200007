@@ -50,8 +50,9 @@ try {
         do {
             this.instr_while.forEach(instruccion => {
                 instruccion.interpretar(entornoDOWhile,tablaDeSimbolos,sb,tablaFunciones);
-                this.condicion.interpretar(entornoDOWhile,tablaDeSimbolos,sb,tablaFunciones);
+                
             });
+            this.condicion.interpretar(entornoDOWhile,tablaDeSimbolos,sb,tablaFunciones);
         } while (String(this.condicion.valor).toLowerCase() === "true");
         
     } catch (error) {

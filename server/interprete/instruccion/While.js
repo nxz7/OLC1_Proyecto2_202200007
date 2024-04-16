@@ -49,8 +49,9 @@ class While extends Instruccion{
         while(String(this.condicion.valor).toLowerCase() === "true"){
             this.instr_while.forEach(instruccion => {
                 instruccion.interpretar(entornoWhile,tablaDeSimbolos,sb,tablaFunciones);
-                this.condicion.interpretar(entornoWhile,tablaDeSimbolos,sb,tablaFunciones);
+                
             });
+            this.condicion.interpretar(entornoWhile,tablaDeSimbolos,sb,tablaFunciones);
         }
 
         return this;

@@ -14,11 +14,19 @@
 [\/][\/][^\n]+ {/* se ignoran */}
 [[\/][\*][^\*\/]+[\*][\/]] {/* se ignoran */}
 "for"       {return "FORFOR";}
+
 ";"             {return  "puntoycoma"; }
 "cout"       {return "COUT";}
+"std::toString" {return "TOSTRING";}
 "execute"       {return "EXECUTE";}
-
+"tolower"       {return "TOLOWER";}
+"toupper"       {return "TOUPPER";}
 "do"       {return "DO";}
+"round"       {return "ROUND";}
+".length()"     {return "FLENGTH";}
+".c_str()"    {return "VCHAR";}
+
+"typeof"       {return "TYPEOF";}
 
 "while"       {return "WHILE";}
 "void"       {return "VOID";}
@@ -105,7 +113,14 @@
     const id_arreglo = require("../interprete/expresion/id_arreglo.js");
     const Potencia = require("../interprete/expresion/Potencia.js");
     const Casteos = require("../interprete/expresion/Casteos.js");
+    const lower = require("../interprete/expresion/lower.js");
     const Mod_vector=require("../interprete/expresion/Mod_vector.js");
+    const upper = require("../interprete/expresion/upper.js");
+    const round = require("../interprete/expresion/round.js");
+    const TypeOf = require("../interprete/expresion/TypeOf.js");
+    const toString = require("../interprete/expresion/toString.js");
+    const Length = require("../interprete/expresion/Length.js");
+    const cstr = require("../interprete/expresion/cstr.js");
 
     const Print = require("../interprete/instruccion/Print.js");
     const If = require("../interprete/instruccion/If.js");
@@ -182,7 +197,8 @@ instruccion
     | inst_DoWhile  {$$ = $1;}
     | exp_InDec     {$$ = $1;}  //tambien tiene lo de llamadas a FUNC/metodos 
     | run_exe       {$$ = $1;}
-	| error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+    | error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+    |error abrirLLAVE	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 yey_for
@@ -275,6 +291,10 @@ variable
         else if (arreglo=="1D1" && $3!= "revisar"){
             $$ = new Vector($2,$1,$1,"LISTA",$3,@1.first_line, @1.first_column);
             arreglo="";
+        }
+        else if (arreglo=="FUNCION_LISTA" && $3!= "revisar"){
+            $$ = new Vector($2,$1,$1,"FUNCION_LISTA",$3,@1.first_line, @1.first_column);
+            arreglo="";
         } 
         else if (arreglo=="1D2" && $3!="revisar"){
             $$ = new Vector($2,$1,tipoArreglo,"DEF",$3,@1.first_line, @1.first_column);
@@ -344,7 +364,9 @@ doble_arreglo
 arreglo
     : new tipos abrirCor expresion cerrarCor puntoycoma {arreglo="1D2"; tipoArreglo=$2; $$=$4;}
     | abrirCor LISTA_ELEMENTOS cerrarCor puntoycoma { arreglo="1D1";$$=$2;}
+    | PALABRA_I VCHAR { arreglo="FUNCION_LISTA"; $$ = new cstr($1, @1.first_line, @1.first_column);}
 ;
+
 
 tipos
     :dobTipo {$$="DOUBLE";}
@@ -386,10 +408,16 @@ expresion
     | expresion interrogracion expresion  dosPuntos expresion   {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
     | expresion MASmas   {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
     | expresion MENOSmenos {$$ = new IncDec($1, $2, @1.first_line, @1.first_column);}
+    | TOLOWER abrirPar expresion cerrarPar {$$= new lower($3,@1.first_line, @1.first_column);}
+    | TOUPPER abrirPar expresion cerrarPar {$$= new upper($3,@1.first_line, @1.first_column);}
+    | ROUND abrirPar expresion cerrarPar {$$= new round($3,@1.first_line, @1.first_column);}
+    | TOSTRING abrirPar expresion cerrarPar {$$= new toString($3,@1.first_line, @1.first_column);}
+    | TYPEOF abrirPar PALABRA_I cerrarPar {$$= new TypeOf($3,@1.first_line, @1.first_column);}        
     | potencia abrirPar expresion coma expresion cerrarPar {$$=new Potencia($3,$5,@1.first_line, @1.first_column);}
     | abrirPar parentesis_exp {$$=$2;}
     | PALABRA_I palabras {
         arreglo ="";
+
         if(totalDos!=null){
             $$= new id_arreglo($1,$2,totalDos, @1.first_line, @1.first_column);
             totalDos=null;
@@ -402,6 +430,10 @@ expresion
             totalDos=null;
             arreglo ="";
             accesoDos=null;
+        } else if ($2 == "LARGO" && totalDos==null && accesoUno==null && accesoDos ==null ){
+            $$ = new Length ($1, @1.first_line, @1.first_column);
+        }else if ($2 == "vectCHAR" && totalDos==null && accesoUno==null && accesoDos ==null ){
+            $$ = new cstr ($1, @1.first_line, @1.first_column);
         }
         else{
         $$ = new id($1, @1.first_line, @1.first_column);
@@ -416,7 +448,7 @@ parentesis_exp
 ;
 
 palabras
-    :abrirCor DATOS cerrarCor amb_palabras {
+    :abrirCor expresion cerrarCor amb_palabras {
         if (accesoDos =="dosDim"){
             $$=$2;
         }else{
@@ -425,11 +457,13 @@ palabras
             totalDos=null;
         }
     }
-    | {$$=null;}
+    |FLENGTH {totalDos=null;accesoUno=null; accesoDos =null; $$="LARGO";}
+    |VCHAR {totalDos=null;accesoUno=null; accesoDos =null; $$="vectCHAR";}
+    |{$$=null;}
 ;
 
 amb_palabras
-    : abrirCor DATOS cerrarCor {accesoDos="dosDim"; totalDos=$2; $$=$2;}
+    : abrirCor expresion cerrarCor {accesoDos="dosDim"; totalDos=$2; $$=$2;}
     | {accesoDos=null; $$=null;}
 ;
 

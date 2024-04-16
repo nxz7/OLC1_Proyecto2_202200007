@@ -60,11 +60,13 @@ class FOR extends Instruccion{
                 instruccion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
                 this.condicion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
             });
+
+            
             
                 //this.actualizacion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
             
         }
-        
+        tablaDeSimbolos.removerRecientesPorEntorno(entornoFor.nombre);
     } catch (error) {
         console.log("ERROR SEMANTICO");
         sb.append("\n");

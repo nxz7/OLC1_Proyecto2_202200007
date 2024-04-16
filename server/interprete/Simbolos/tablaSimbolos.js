@@ -51,7 +51,24 @@ class tablaSimbolos {
         }
     }
     
-    
+    removerRecientesPorEntorno(entorno) {
+        const indicesToRemove = [];
+        for (let i = this.tablaSimbolos.length - 1; i >= 0; i--) {
+            if (this.tablaSimbolos[i].entorno === entorno) {
+                indicesToRemove.push(i);
+            } else {
+                // para cuando distinto.
+                break;
+            }
+        }
+
+        // rem
+        indicesToRemove.forEach(index => {
+            this.tablaSimbolos.splice(index, 1);
+        });
+
+        console.log(`Removed ${indicesToRemove.length} recently added elements with environment name "${entorno}".`);
+    }
 
     getSimbolo(nombre, entorno) {
     
@@ -74,18 +91,25 @@ class tablaSimbolos {
             }
             
                 console.log("ENTORNO ANTERIOR: ", entorno.anterior.nombre);
-                console.log("ENTORNO ANTERIOR anterior: ", entorno.anterior.anterior.nombre);
+                //console.log("ENTORNO ANTERIOR anterior: ", entorno.anterior.anterior.nombre);
                 for (let i = 0; i < this.tablaSimbolos.length; i++) {
-                    if (this.tablaSimbolos[i].id.toLowerCase() == nombre.toLowerCase() && this.tablaSimbolos[i].entorno == entorno.anterior.nombre) {
+                    console.log("ENTORNO ANTERIOR 1: ", entorno.anterior.nombre);
+                    console.log("ENTORNO ANTERIOR 2: ", this.tablaSimbolos[i].entorno);
+                    console.log("ENTORNO ANTERIOR 11: ", this.tablaSimbolos[i].id.toLowerCase());
+                    console.log("ENTORNO ANTERIOR 12: ", nombre.toLowerCase());
+                    if (this.tablaSimbolos[i].id.toLowerCase() == nombre.toLowerCase() && this.tablaSimbolos[i].entorno.toString() == entorno.anterior.nombre.toString()) {
+                        console.log(this.tablaSimbolos[i]);
+                        
                         return this.tablaSimbolos[i];
                     } 
                 }
 
+                if(entorno.anterior.anterior != null){
                 for (let i = 0; i < this.tablaSimbolos.length; i++) {
                     if (this.tablaSimbolos[i].id.toLowerCase() == nombre.toLowerCase() && this.tablaSimbolos[i].entorno == entorno.anterior.anterior.nombre) {
                         return this.tablaSimbolos[i];
                     } 
-                }
+                }}
 
             // si no global
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
@@ -93,6 +117,7 @@ class tablaSimbolos {
                     return this.tablaSimbolos[i];
                 }
             }
+
             console.log("Variable no existe");
             return null;
         }
@@ -118,6 +143,19 @@ class tablaSimbolos {
                     return i;
                 }
             }
+
+            for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == entorno.anterior.nombre) {
+                    return i;
+                }
+            }
+
+            if(entorno.anterior.anterior != null){
+                for (let i = 0; i < this.tablaSimbolos.length; i++) {
+                    if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == entorno.anterior.anterior.nombre) {
+                        return i;
+                    } 
+                }}
             
             for (let i = 0; i < this.tablaSimbolos.length; i++) {
                 if (this.tablaSimbolos[i].id == nombre && this.tablaSimbolos[i].entorno == "GLOBAL") {

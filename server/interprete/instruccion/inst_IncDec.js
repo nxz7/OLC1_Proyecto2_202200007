@@ -21,10 +21,16 @@ class inst_IncDec extends Instruccion{
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
 
+        
+try {
         let encontrada = tablaDeSimbolos.getSimbolo(this.id,entorno);
         let index = tablaDeSimbolos.getSimboloIndex(this.id,entorno);
-try {
-        if (encontrada!= null){
+        console.log("ENCONTRADA: ", encontrada);
+        console.log("ENCONTRADA: ", encontrada.id);
+        let encon = encontrada.id;
+        console.log("ENCONTRADA: ", encon);
+        console.log("INDEX: ", index);
+        if (encontrada != null){
             if(this.operador == "++"){
                 if(encontrada.tipo == "INT"){
                     let actualizar = encontrada.valor+1;
@@ -77,7 +83,7 @@ try {
             
             }
 
-            }
+        }
         else {
             console.log("Error semántico: la variable no existe");
             sb.append("\n");

@@ -20,7 +20,7 @@ class id_arreglo extends Expresion{
         if (this.index2 == null && this.index1 != null){
             nodo.agregarHijo('[');
             nodo.agregarHijoAST(this.index1.getNodo());
-            nodo.agregarHijo('[');
+            nodo.agregarHijo(']');
         }else if(this.index2 != null && this.index1 != null){
             nodo.agregarHijo('[');
             nodo.agregarHijoAST(this.index1.getNodo());
@@ -38,15 +38,22 @@ class id_arreglo extends Expresion{
         //console.log(this.index1);
         //console.log(this.index2);
         let index1=this.index1.interpretar(entorno,tablaDeSimbolos,sb);
-        
+        index1=parseFloat(index1);
+        console.log("index1ACA:"+index1);
 
         let encontrada = tablaDeSimbolos.getSimbolo(this.id,entorno);
 
         if (encontrada!= null && this.index2 == null && this.index1 != null){
-            //console.log(encontrada.valor[index1]);
-            let valor =encontrada.valor[index1];
-            let dato = new Dato(encontrada.valor[index1], encontrada.tipo, this.fila, this.columna)
+            //int_valor =[];
+            console.log(encontrada.valor);
+            let valor =encontrada.valor[Number(index1)];
+            console.log(">>>>>>>>>"+ encontrada.valor[index1]);
+            let int_valor=encontrada.valor;
+            index1=+index1;
+            console.log("index1:"+index1);
+            let dato = new Dato(int_valor[index1], encontrada.tipo, this.fila, this.columna)
             this.tipo = dato.tipo;
+            //console.log(">>>"+valor+"<<<");
             if (this.tipo == "Double"||this.tipo == "INT"){
                 dato.valor=parseFloat(dato.valor);
             } 

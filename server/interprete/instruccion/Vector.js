@@ -38,7 +38,13 @@ class Vector extends Instruccion{
             nodo.agregarHijo("]");
             nodo.agregarHijo(";");
 
+        }else if(this.tipoArr == "FUNCION_LISTA"){
+            nodo.agregarHijo("[");
+            nodo.agregarHijo(this.expresion.getNodo());
+            nodo.agregarHijo("]");
+            nodo.agregarHijo(";");
         }
+
         return nodo;
 
         
@@ -117,6 +123,7 @@ class Vector extends Instruccion{
             
 
         }else if(this.tipoArr == "LISTA"){
+        try{
             this.expresion.forEach(instruccion => {
                 instruccion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
                 arreglo.push(instruccion.valor);
@@ -126,13 +133,20 @@ class Vector extends Instruccion{
             entorno.addSimbolo(this.id, arreglo, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
             let variable_ag = new simb(this.id, arreglo, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna, entorno.nombre);
             tablaDeSimbolos.agregarSimbolo(variable_ag);
-
-            //let prueba = tablaDeSimbolos.getSimbolo(this.id,entorno);
-
-            //console.log(prueba.valor);
-            //console.log("***");
-            //console.log(prueba.valor[3]);
-
+        } catch (error) {
+            console.error("ERROR");
+            console.log("aca");
+        }
+        }else if (this.tipoArr == "FUNCION_LISTA"){
+            try{
+            arreglo = this.expresion.interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones);
+            entorno.addSimbolo(this.id, arreglo, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+            let variable_ag = new simb(this.id, arreglo, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna, entorno.nombre);
+            tablaDeSimbolos.agregarSimbolo(variable_ag);
+        } catch (error) {
+            console.error("ERROR");
+            console.log("aca");
+        }
         }
     }
 

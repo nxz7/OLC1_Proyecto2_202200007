@@ -67,10 +67,11 @@ class run_funcion extends Instruccion{
             }
                 
             });
-
-
+            console.log(datos);
+            console.log(datos.length);
             for (let i = 0; i < datos.length; i++) {
-                console.log("-------------------")
+                console.log("-------------------");
+                console.log(">>>>>>>>>>>>>>>>>>>>");
                 const currentItem = datos[i];
                 //console.log(currentItem); // Print current item from instruccion array
                 let tipo_v = parametros[i * 2];
@@ -78,6 +79,9 @@ class run_funcion extends Instruccion{
                 //console.log(tipo_v);
                 //console.log(id_v);
                 let variable_ag = new simb(id_v, currentItem, tipo_v, "temporal", this.fila, this.columna, this.id);
+                console.log(">>>>>>>>>>>>>>>>>>>>");
+                console.log(variable_ag);
+
                 tablaDeSimbolos.agregarSimbolo(variable_ag);
                 
             }}
@@ -86,8 +90,8 @@ class run_funcion extends Instruccion{
 
             instrucciones.forEach(instruccion => {
                 instruccion.interpretar(funcionNombre,tablaDeSimbolos,sb,tablaFunciones);
-                console.log("instruccion");
-                console.log(instruccion);
+                //console.log("instruccion");
+                //console.log(instruccion);
             });
 
             if (funcion.parametros!=null){tablaDeSimbolos.limpiarVariablesTemporales();}
@@ -95,7 +99,7 @@ class run_funcion extends Instruccion{
             
             return this;
     }
-            
+    //if (funcion.parametros!=null){tablaDeSimbolos.limpiarVariablesTemporales();}
         } catch (error) {
             
             console.error('ERROR tablaFunciones.getFuncion:', error);
