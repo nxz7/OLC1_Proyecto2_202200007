@@ -27,14 +27,14 @@ router.post('/Ejecutar', (req, res) => {
     try {
         // First iteration: Interpret all instructions except those with specific constructor name
         resultado.forEach(instruccion => {
-            if (instruccion.constructor.name !== "execute") {
+            if (instruccion.constructor.name !== "execute" && instruccion.tipo != "ERROR") {
                 instruccion.interpretar(entornoGlobal, tablaDeSimbolos, sb, tablaFunciones);
             }
         });
     
         // Second iteration: Interpret only instructions with specific constructor name
         resultado.forEach(instruccion => {
-            if (instruccion.constructor.name === "execute") {
+            if (instruccion.constructor.name === "execute" && instruccion.tipo != "ERROR") {
                 instruccion.interpretar(entornoGlobal, tablaDeSimbolos, sb, tablaFunciones);
             }
         });

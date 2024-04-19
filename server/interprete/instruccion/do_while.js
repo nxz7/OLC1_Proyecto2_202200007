@@ -48,13 +48,39 @@ class do_while extends Instruccion{
         }
 try {
         do {
-            this.instr_while.forEach(instruccion => {
+
+            let result = TipoInstr.DOWHILE;
+            let reg = null;
+            for (let i = 0; i < this.instr_while.length; i++) {
+                let instruccion = this.instr_while[i]
                 instruccion.interpretar(entornoDOWhile,tablaDeSimbolos,sb,tablaFunciones);
-                
-            });
+                if(instruccion.tipo == TipoInstr.BREAK){
+                    result = TipoInstr.BREAK;
+                    break;
+                }if(instruccion.tipo == TipoInstr.RETURN){
+                    result = TipoInstr.RETURN;
+                    return;
+                    
+                } 
+            }
+
+
+            if(result == TipoInstr.BREAK){
+                break;
+            }
+            if(result == TipoInstr.RETURN){
+                return;
+            } 
+
             this.condicion.interpretar(entornoDOWhile,tablaDeSimbolos,sb,tablaFunciones);
+
+
+
         } while (String(this.condicion.valor).toLowerCase() === "true");
         
+
+
+
     } catch (error) {
         console.log("ERROR SEMANTICO");
         sb.append("\n");

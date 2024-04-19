@@ -87,12 +87,27 @@ class run_funcion extends Instruccion{
             }}
 
             let instrucciones = funcion.instrucciones;
+            let result = TipoInstr.FUNCION;
+            for (let i = 0; i < instrucciones.length; i++) {
+                const instruccion = instrucciones[i];
+                instruccion.interpretar(funcionNombre, tablaDeSimbolos, sb, tablaFunciones);
+                if(instruccion.tipo == TipoInstr.BREAK){
+                    result = TipoInstr.BREAK;
+                    break;
+                }if(instruccion.tipo == TipoInstr.RETURN){
+                    result = TipoInstr.RETURN;
+                    return;
+                    
+                } 
+            }
 
-            instrucciones.forEach(instruccion => {
-                instruccion.interpretar(funcionNombre,tablaDeSimbolos,sb,tablaFunciones);
-                //console.log("instruccion");
-                //console.log(instruccion);
-            });
+            if(result == TipoInstr.BREAK){
+                return;
+            }
+            if(result == TipoInstr.RETURN){
+                return;
+            } 
+            
 
             if (funcion.parametros!=null){tablaDeSimbolos.limpiarVariablesTemporales();}
 

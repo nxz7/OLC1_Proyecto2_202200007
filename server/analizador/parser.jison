@@ -18,6 +18,8 @@
 ";"             {return  "puntoycoma"; }
 "cout"       {return "COUT";}
 "std::toString" {return "TOSTRING";}
+"break"       {return "TipoBreak";}
+"continue"       {return "TipoContinue";}
 "execute"       {return "EXECUTE";}
 "tolower"       {return "TOLOWER";}
 "toupper"       {return "TOUPPER";}
@@ -25,6 +27,8 @@
 "round"       {return "ROUND";}
 ".length()"     {return "FLENGTH";}
 ".c_str()"    {return "VCHAR";}
+
+"return"       {return "tipoReturn";}
 
 "typeof"       {return "TYPEOF";}
 
@@ -136,6 +140,10 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     const While = require("../interprete/instruccion/While.js");
     const do_while = require("../interprete/instruccion/do_while.js");
     const For = require("../interprete/instruccion/For.js");
+    const Break = require("../interprete/instruccion/Break.js");
+    const Cont = require("../interprete/instruccion/Cont.js");
+
+    const Rtrn = require("../interprete/instruccion/Rtrn.js");
 
     const tablaError = require('../interprete/Errores/tablaError.js');
     const error = require('../interprete/Errores/error.js');
@@ -195,11 +203,22 @@ instruccion
     | intrWhile     {$$ = $1;}
     | yey_for     {$$ = $1;}
     | inst_DoWhile  {$$ = $1;}
+    | TipoBreak puntoycoma {$$= new Break(this._$.first_line  , this._$.first_column);}
+    | TipoContinue puntoycoma {$$= new Cont(this._$.first_line  , this._$.first_column);}
+    | tipoReturn ret_dato puntoycoma {$$= new Rtrn($2,this._$.first_line  , this._$.first_column);}
     | exp_InDec     {$$ = $1;}  //tambien tiene lo de llamadas a FUNC/metodos 
     | run_exe       {$$ = $1;}
     | error puntoycoma	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
     |error abrirLLAVE	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+    |error cerrarLLAVE	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
+
+ret_dato
+:expresion {$$=$1;}
+|{$$=null;}
+;
+
+
 
 yey_for
 :FORFOR abrirPar ml_for expresion puntoycoma ml_actualizacion cerrarPar abrirLLAVE listainstr  cerrarLLAVE {$$= new For($3,$4,$6, $9, this._$.first_line  , this._$.first_column);}

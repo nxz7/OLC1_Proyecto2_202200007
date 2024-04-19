@@ -63,6 +63,8 @@ class If extends Instruccion{
         console.log("entornoIf: ", entornoIf);
         console.log("entornoANTERIOR: ", entorno);
         this.condicion.interpretar(entornoIf,tablaDeSimbolos,sb,tablaFunciones);
+        if (this.cond_elseIf!=null){
+        this.cond_elseIf.interpretar(entornoIf,tablaDeSimbolos,sb,tablaFunciones);}
 
         if(this.condicion.tipo != TipoDato.BOOLEAN){
             console.log("Error Semántico: la condicion del if debe ser tipo boolean");
@@ -74,29 +76,91 @@ class If extends Instruccion{
         }
         try{
 //arreglar esto
+
         if(String(this.condicion.valor).toLowerCase() === "true"){
-            this.instr_if.forEach(instruccion => {
+        for (let i = 0; i < this.instr_if.length; i++) {
+                let instruccion = this.instr_if[i]
                 instruccion.interpretar(entornoIf,tablaDeSimbolos,sb,tablaFunciones);
-            });
-        }
-        else if (this.else_if!=null && String(this.cond_elseIf.valor).toLowerCase() === "true"){
+                if(instruccion.tipo == TipoInstr.BREAK){
+                    this.tipo = TipoInstr.BREAK;
+                    break;
+                }
+                if(instruccion.tipo == TipoInstr.RETURN){
+                    console.log("unonono");
+                    console.log(instruccion.expresion.valor);
+                    this.tipo = TipoInstr.RETURN;
+                    if(instruccion.expresion.valor != null){
+                        console.log("retretret");
+                        console.log(parseFloat(instruccion.expresion.valor));
+                        if(instruccion.expresion.tipo == "INT" || instruccion.expresion.tipo == "DOUBLE" ){
+                            return parseFloat(instruccion.expresion.valor);
+                        }
+                        return instruccion.expresion.valor;
+                    }else{break;}
+                    
+                }
+        } 
+    } else if (this.else_if!=null && String(this.cond_elseIf.valor).toLowerCase() === "true"){
             let entornoIf_Else = new Entorno(TipoInstr.IF_ELSE, entorno);
             console.log(entornoIf_Else.anterior.nombre);
-
-            this.else_if.forEach(instruccion => {
+            console.log("ACAAAAAAAAAAAAA");
+            console.log(this.else_if);
+            for (let i = 0; i < this.else_if.length; i++) {
+                let instruccion = this.else_if[i]
                 instruccion.interpretar(entornoIf_Else,tablaDeSimbolos,sb,tablaFunciones);
-            });
-
-        }else if (this.cond_else!=null){
-            let entorno_Else = new Entorno(TipoInstr.ELSE, entorno);
-            console.log(entorno_Else.anterior.nombre);
-
-            this.instr_else.forEach(instruccion => {
-                instruccion.interpretar(entorno_Else,tablaDeSimbolos,sb,tablaFunciones);
-            });
+                if(instruccion.tipo == TipoInstr.BREAK){
+                    this.tipo = TipoInstr.BREAK;
+                    break;
+                }
+                if(instruccion.tipo == TipoInstr.RETURN){
+                    console.log("unonono");
+                    console.log(instruccion.expresion.valor);
+                    this.tipo = TipoInstr.RETURN;
+                    if(instruccion.expresion.valor != null){
+                        console.log("retretret");
+                        console.log(instruccion.expresion.valor);
+                        if(instruccion.expresion.tipo == "INT" || instruccion.expresion.tipo == "DOUBLE" ){
+                            return parseFloat(instruccion.expresion.valor);
+                        }
+                        return instruccion.expresion.valor;
+                    }else{break;}
+                    
+                }
+        } 
+        }else{
+            if (this.cond_else!=null){
+                let entorno_Else = new Entorno(TipoInstr.ELSE, entorno);
+                console.log(entorno_Else.anterior.nombre);
+    
+                
+                for (let i = 0; i < this.instr_else.length; i++) {
+                    let instruccion = this.instr_else[i]
+                    instruccion.interpretar(entorno_Else,tablaDeSimbolos,sb,tablaFunciones);
+                    if(instruccion.tipo == TipoInstr.BREAK){
+                        this.tipo = TipoInstr.BREAK;
+                        break;
+                    }
+                    if(instruccion.tipo == TipoInstr.RETURN){
+                        console.log("unonono");
+                        console.log(instruccion.expresion.valor);
+                        this.tipo = TipoInstr.RETURN;
+                        if(instruccion.expresion.valor != null){
+                            console.log("retretret");
+                            //console.log(instruccion.expresion.valor);
+                            console.log(parseFloat(instruccion.expresion.valor));
+                                if(instruccion.expresion.tipo == "INT" || instruccion.expresion.tipo == "DOUBLE" ){
+                                    return parseFloat(instruccion.expresion.valor);
+                                }
+                            return instruccion.expresion.valor;
+                        }else{break;}
+                        
+                    }
+            } 
+    
+            }
+    
 
         }
-
     } catch (error) {
         console.log("ERROR SEMANTICO");
         sb.append("\n");

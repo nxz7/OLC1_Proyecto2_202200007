@@ -21,7 +21,11 @@ const TipoInstr = {
     ELSE: 'ELSE',
     WHILE: 'WHILE',
     DOWHILE: 'DOWHILE',
-    FOR: 'FOR'
+    FOR: 'FOR',
+    BREAK: 'BREAK',
+    CONTINUE: 'CONTINUE',
+    RETURN: 'RETURN',
+    SWITCH: 'SWITCH'
 }
 
 module.exports = {Instruccion, TipoInstr}

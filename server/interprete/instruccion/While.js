@@ -47,11 +47,35 @@ class While extends Instruccion{
         }
 
         while(String(this.condicion.valor).toLowerCase() === "true"){
-            this.instr_while.forEach(instruccion => {
+            
+            let result = TipoInstr.WHILE;
+            for (let i = 0; i < this.instr_while.length; i++) {
+                let instruccion = this.instr_while[i]
                 instruccion.interpretar(entornoWhile,tablaDeSimbolos,sb,tablaFunciones);
+                if(instruccion.tipo == TipoInstr.BREAK){
+                    result = TipoInstr.BREAK;
+                    break;
+                }
+                if(instruccion.tipo == TipoInstr.RETURN){
+                    result = TipoInstr.RETURN;
+                    return;
+                    
+                } 
                 
-            });
+            }
+
+            if(result == TipoInstr.BREAK){
+                break;
+            } 
+            if(result == TipoInstr.RETURN){
+                return;
+            } 
+            
+
             this.condicion.interpretar(entornoWhile,tablaDeSimbolos,sb,tablaFunciones);
+            
+
+
         }
 
         return this;

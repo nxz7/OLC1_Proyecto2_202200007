@@ -55,14 +55,32 @@ class FOR extends Instruccion{
         }
 
         try {
-        for (this.declaracion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones); String(this.condicion.valor).toLowerCase() === "true"; this.actualizacion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones)) {
-            this.instr_for.forEach(instruccion => {
-                instruccion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
-                this.condicion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
-            });
+        for ((this.declaracion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones)); (String(this.condicion.valor).toLowerCase() === "true"); (this.actualizacion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones))) {
 
+            let result = TipoInstr.FOR;
+            for (let i = 0; i < this.instr_for.length; i++) {
+                let instruccion = this.instr_for[i]
+                instruccion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
+                if(instruccion.tipo == TipoInstr.BREAK){
+                    result = TipoInstr.BREAK;
+                    break;
+                }
+                if(instruccion.tipo == TipoInstr.RETURN){
+                    result = TipoInstr.RETURN;
+                    return;
+                    
+                } 
+            }
+
+            if(result == TipoInstr.BREAK){
+                break;
+            }
+            if(result == TipoInstr.RETURN){
+                return;
+            } 
             
             
+            this.condicion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
                 //this.actualizacion.interpretar(entornoFor,tablaDeSimbolos,sb,tablaFunciones);
             
         }
