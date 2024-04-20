@@ -1,0 +1,160 @@
+TERMINALES = {FORFOR, SWITCH, CCASE, puntoycoma, COUT, TOSTRING, TipoBreak, TipoContinue, EXECUTE, TOLOWER, TOUPPER, DO, ROUND, FLENGTH, VCHAR, tipoReturn, TYPEOF, WHILE, VOID, endl, IF, ELSE, CorImp, dosCor, MASmas, MENOSmenos, dosIgual, menorIgual, 
+mayorIgual, diferente, And, oSigno, MAS, POR, IGUAL, DIVIDIR, MENOS, potencia, modulo, dosPuntos, new, dobTipo, intTipo, charTipo, boolTipo, stringTipo, exclamacion, abrirPar, cerrarPar, abrirLLAVE, cerrarLLAVE, menorQue, mayorQue, interrogracion, 
+coma, abrirCor, cerrarCor, DOUBLE, INT, BOOLEAN, CHAR, CADENA, PALABRA_I}
+
+NO TERMINALES = {<DATOS>, <lista_par>, <vect_2d>, <llamarMoF>, <exp_InDec>, <amb_palabras>, <palabras>, <parentesis_exp>, <expresion>, <LISTA_ELEMENTOS>, <tipos>, <arreglo>, <doble_arreglo>, <lista_int>, <lista_var>, <t_declaracion>, <variable>, <ultimo_else>, 
+<prod_if_else>, <siguiente_if>, <instrif>, <tipos_print>, <print>, <run_exe>, <metodos>, <intrWhile>, <inst_DoWhile>, <ml_actualizacion>, <ml_for>, <yey_for>, <ret_dato>, <instruccion>, <listainstr>, <inicio>}
+
+PRODUCCIONES:
+<Inicio>::= <listainstr> EOF 
+
+<listainstr> ::= <listainstr> <instruccion>       
+    | <instruccion>               
+
+<Instrucción> ::= <variable>       
+    | <metodos>        
+    | <print>         
+    | <instrif>       
+    | <intrWhile>     
+    | <yey_for>     
+    | <inst_DoWhile>  
+    | <TipoBreak> puntoycoma 
+    | <TipoContinue> puntoycoma 
+    | <tipoReturn> <ret_dato> puntoycoma 
+    | <exp_InDec>     
+    | <run_exe>      
+    | <error> puntoycoma	
+    | <error> abrirLLAVE	
+    | <error> cerrarLLAVE	
+
+<ret_dato> ::= <expresion> 
+| epsilon
+
+<yey_for> ::= <FORFOR> abrirPar <ml_for> <expresion> puntoycoma <ml_actualizacion> cerrarPar abrirLLAVE <listainstr>  cerrarLLAVE 
+
+<ml_for> ::=  <variable> 
+| <expresion> puntoycoma 
+
+<ml_actualizacion> ::= PALABRA_I MASmas    
+    | PALABRA_I MENOSmenos 
+
+<inst_DoWhile> ::= DO abrirLLAVE <listainstr>  cerrarLLAVE WHILE abrirPar <expresion> cerrarPar puntoycoma 
+
+<intrWhile> ::= WHILE abrirPar <expresion> cerrarPar abrirLLAVE <listainstr>  cerrarLLAVE 
+
+<metodos> ::= VOID PALABRA_I abrirPar  <lista_int> cerrarPar abrirLLAVE <listainstr>  cerrarLLAVE 
+
+<run_exe> ::= EXECUTE PALABRA_I abrirPar <llamarMoF> 
+
+<print> ::= COUT CorImp <expresion> <tipos_print>  
+
+<tipos_print> ::= puntoycoma 
+    | CorImp endl puntoycoma 
+
+<instrif> ::= IF abrirPar <expresion> cerrarPar abrirLLAVE <listainstr>  cerrarLLAVE <siguiente_if>  
+
+<siguiente_if> ::= ELSE <prod_if_esle> 
+| epsilon
+
+<prod_if_esle> ::= IF abrirPar <expresion> cerrarPar abrirLLAVE <listainstr>  cerrarLLAVE <ultimo_else> 
+| abrirLLAVE <listainstr>  cerrarLLAVE 
+
+<ultimo_else> ::= ELSE abrirLLAVE <listainstr>  cerrarLLAVE 
+| epsilon
+
+<Variable> ::= <tipos> PALABRA_I <t_declaracion> 
+
+<t_declaracion> ::= IGUAL <expresion> puntoycoma 
+    |coma <lista_var> IGUAL <expresion> puntoycoma 
+    |puntoycoma 
+    |abrirCor cerrarCor IGUAL <arreglo> 
+    |dosCor IGUAL <doble_arreglo> 
+    |abrirPar <lista_int> cerrarPar abrirLLAVE <listainstr>  cerrarLLAVE  
+
+<lista_var> ::= <lista_var> coma PALABRA_I 
+    | PALABRA_I 
+
+<lista_int> ::= <lista_int> coma <tipos> PALABRA_I 
+    | <tipos> PALABRA_I 
+    | epsilon
+
+<doble_arreglo> ::= new <tipos> abrirCor <expresion> cerrarCor abrirCor <expresion> cerrarCor puntoycoma 
+    | abrirCor abrirCor <LISTA_ELEMENTOS> cerrarCor coma abrirCor <LISTA_ELEMENTOS> cerrarCor cerrarCor puntoycoma 
+
+<Arreglo> ::= new <tipos> abrirCor <expresion> cerrarCor puntoycoma 
+    | abrirCor <LISTA_ELEMENTOS> cerrarCor puntoycoma 
+    | PALABRA_I VCHAR 
+
+<tipos> ::= dobTipo 
+    |intTipo 
+    |charTipo 
+    |boolTipo 
+    |stringTipo 
+
+<LISTA_ELEMENTOS> ::= <LISTA_ELEMENTOS> coma DATOS 
+    |DATOS 
+
+<expresion> ::= MENOS <expresion> %prec UMENOS  
+    | exclamacion <expresion> %prec UEX 
+    | CADENA    
+    | CHAR  
+    | BOOLEAN   
+    | DOUBLE    
+    | INT   
+    | <expresion> mayorIgual <expresion>     
+    | <expresion> mayorQue <expresion>        
+    | <expresion> menorIgual <expresion>        
+    | <expresion> menorQue <expresion>        
+    | <expresion> diferente <expresion>       
+    | <expresion> dosIgual <expresion>       
+    | <expresion> modulo <expresion>       
+    | <expresion> DIVIDIR <expresion>       
+    | <expresion> MENOS <expresion>       
+    | <expresion> MAS <expresion>       
+    | <expresion> POR <expresion>       
+    | <expresion> oSigno <expresion>       
+    | <expresion> And <expresion>       
+    | <expresion> interrogracion <expresion>  dosPuntos <expresion>   
+    | <expresion> MASmas   
+    | <expresion> MENOSmenos 
+    | TOLOWER abrirPar <expresion> cerrarPar 
+    | TOUPPER abrirPar <expresion> cerrarPar 
+    | ROUND abrirPar <expresion> cerrarPar 
+    | TOSTRING abrirPar <expresion> cerrarPar 
+    | TYPEOF abrirPar PALABRA_I cerrarPar 
+    | potencia abrirPar <expresion> coma <expresion> cerrarPar 
+    | abrirPar <parentesis_exp> 
+    | PALABRA_I palabras  
+
+<parentesis_exp> ::= : <expresion>  cerrarPar 
+    |tipos cerrarPar <expresion> 
+
+<palabras> ::= abrirCor <expresion> cerrarCor amb_palabras 
+    |FLENGTH 
+    |VCHAR 
+    |epsilon
+
+<amb_palabras> ::= abrirCor <expresion> cerrarCor 
+    | epsilon
+
+<exp_InDec> ::= PALABRA_I MASmas  puntoycoma  
+    | PALABRA_I MENOSmenos puntoycoma 
+    | PALABRA_I abrirPar <llamarMoF> 
+    | PALABRA_I abrirCor <expresion> cerrarCor <vect_2d> IGUAL <expresion> puntoycoma 
+    | PALABRA_I IGUAL <expresion> puntoycoma 
+
+<llamarMoF> ::= cerrarPar puntoycoma 
+    | <lista_par> cerrarPar puntoycoma 
+
+<vect_2d> ::= abrirCor <expresion> cerrarCor 
+    |epsilon
+
+<lista_par> ::= <lista_par> coma <expresion> 
+    |<expresion> 
+
+<DATOS> ::= CADENA    
+    | CHAR  
+    | BOOLEAN   
+    | DOUBLE    
+    | INT   
+    | PALABRA_I 
