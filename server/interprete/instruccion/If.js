@@ -135,6 +135,8 @@ class If extends Instruccion{
                 
                 for (let i = 0; i < this.instr_else.length; i++) {
                     let instruccion = this.instr_else[i]
+                    console.log("instruccionELSE: ");
+                    console.log(instruccion);
                     instruccion.interpretar(entorno_Else,tablaDeSimbolos,sb,tablaFunciones);
                     if(instruccion.tipo == TipoInstr.BREAK){
                         this.tipo = TipoInstr.BREAK;

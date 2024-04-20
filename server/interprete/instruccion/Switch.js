@@ -39,7 +39,29 @@ class Switch extends Instruccion{
 
 
     interpretar(entorno,tablaDeSimbolos,sb,tablaFunciones){
-        console.log("entornoSwitch: ", entorno);
+        let entornoSwitch = new Entorno(TipoInstr.SWITCH, entorno);
+        let valS = this.valor.interpretar(entornoSwitch, tablaDeSimbolos, sb, tablaFunciones);
+        
+        let index = -1;
+        for (let i = 0; i < this.casos.length; i++) {
+            let casVal = this.casos[i].interpretar(entornoSwitch, tablaDeSimbolos, sb, tablaFunciones);
+            if (casVal === valS) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index !== -1) {
+            const inst_caso = this.intr_casos[index]; 
+            for (const inst of inst_caso) {
+                inst.interpretar(entornoSwitch, tablaDeSimbolos, sb, tablaFunciones);
+            }
+        } else {
+            console.log("ERROR SEMANTICO EN SWITCH.");
+            sb.append("\n");
+            sb.append("ERROR SEMANTICO EN SWITCH.");
+            sb.append("\n");
+        }
 
         return this;
     }

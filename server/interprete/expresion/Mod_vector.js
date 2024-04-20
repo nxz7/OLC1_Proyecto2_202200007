@@ -8,7 +8,7 @@ const NodoAst_1 = require("../Simbolos/NodoAst");
 
 class Mod_vector extends Expresion{
     constructor(id,index1,index2,expresion,  fila, columna){
-        super("ERROR", TipoDato.ERROR, fila, columna);
+        super("ERROR", "MOD", fila, columna);
         this.id = id;
         this.index1 = index1;
         this.index2 = index2;

@@ -15,6 +15,9 @@
 [[\/][\*][^\*\/]+[\*][\/]] {/* se ignoran */}
 "for"       {return "FORFOR";}
 
+"switch"       {return "SWITCH";}
+"case"       {return "CCASE";}
+
 ";"             {return  "puntoycoma"; }
 "cout"       {return "COUT";}
 "std::toString" {return "TOSTRING";}
@@ -142,6 +145,9 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     const For = require("../interprete/instruccion/For.js");
     const Break = require("../interprete/instruccion/Break.js");
     const Cont = require("../interprete/instruccion/Cont.js");
+    const Mod_id=require("../interprete/expresion/Mod_id.js");
+
+    const Switch=require("../interprete/instruccion/Switch.js");
 
     const Rtrn = require("../interprete/instruccion/Rtrn.js");
 
@@ -151,6 +157,8 @@ const inst_IncDec = require("../interprete/instruccion/inst_IncDec.js");
     let par =[];
     let arreglo = "";
     let varias_variables = [];
+
+    let fcasess = [];
 
     let tipoArreglo = "";
     let accesoUno = "";
@@ -212,6 +220,8 @@ instruccion
     |error abrirLLAVE	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
     |error cerrarLLAVE	{$$ = new Dato($1, "ERROR", this._$.first_line  , this._$.first_column); tablaDeErrores.agregarError(new error($1, "SINTACTICO", this._$.first_line  , this._$.first_column)); console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
+
+
 
 ret_dato
 :expresion {$$=$1;}
@@ -491,6 +501,7 @@ exp_InDec
     | PALABRA_I MENOSmenos puntoycoma {$$ = new inst_IncDec($1, $2, @1.first_line, @1.first_column);}
     | PALABRA_I abrirPar llamarMoF {$$= new run_funcion($1,$3, @1.first_line, @1.first_column);}
     | PALABRA_I abrirCor expresion cerrarCor vect_2d IGUAL expresion puntoycoma {$$= new Mod_vector($1,$3,$5,$7, @1.first_line, @1.first_column);}
+    | PALABRA_I IGUAL expresion puntoycoma {$$= new Mod_id($1,$3, @1.first_line, @1.first_column);}
 ;
 
 llamarMoF
